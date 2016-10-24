@@ -1,0 +1,35 @@
+<ion-view view-title="Nueva Rutina">
+    <ion-nav-bar class="bar-positive">
+        <ion-nav-back-button>
+            <i></i> Atras
+        </ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content ng-controller="ClasesCtrl as controlador">
+        <div class="list list-inset input-search">
+            <label class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="text" placeholder="Buscar alumno" ng-model="search">
+            </label>
+        </div>        
+        <p class="text text-center" ng-if="!controlador.aulas[0]">No tienes aulas asignadas</p>  
+        <ion-list class="item-border-off">
+            <div collection-repeat="aula in controlador.aulas | orderBy:'nombre' | filter:search | filter:{habilitada:true}">
+                <ion-item class="item-avatar item-icon-right" type="item-text-wrap" href="#/tab/chatNewDestinoAula/{{aula.id}}/{{aula.nombre}}">
+                    <img ng-src="img/aulasAvatar.jpg">
+                    <h3>
+                      {{aula.nombre}}
+                    </h3>
+                    <p>Enviar a todos los niños del Aula</p>
+                </ion-item>                
+                <ion-item ng-repeat="nino in aula.alumnos | orderBy:'nombre' | filter:search | filter:{habilitado:true}" class="item-avatar item-icon-right" type="item-text-wrap" href="#/tab/chatNewDestino/{{nino.id}}/{{nino.nombre}}  {{nino.apellido}}">
+                    <img ng-src="http://54.94.144.249:81/usuarioAlumno/avatar?id={{nino.id}}">
+                    <h3>
+                      {{nino.nombre}}  {{nino.apellido}}
+                    </h3>
+                    <p>Aula {{aula.nombre}}</p>
+                    <i class="icon ion-chevron-right icon-accessory"></i>
+                </ion-item>
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-view>
