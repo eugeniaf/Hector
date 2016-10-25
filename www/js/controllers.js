@@ -20,7 +20,7 @@ angular.module('starter.controllers', [])
     //---        
   })
 
-  .controller('RegistroCtrl', function ($scope, $state, $ionicLoading, $ionicPopup, $ionicHistory, $localstorage) { 
+  .controller('RegistroCtrl', function ($scope, $state, $ionicLoading, $ionicPopup, $ionicHistory, $localstorage) {
     // se crea la estructura user, luego aquí se reciben el usuario y la contraseña
     $scope.user = {}
 
@@ -98,7 +98,9 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('NuevaRutinaCtrl', function ($scope) { })
+  .controller('NuevaRutinaCtrl', function ($scope) {
+
+  })
 
   .controller('DashCtrl', function ($scope) { })
 

@@ -13,7 +13,7 @@
         </div>
         <p class="text text-center" ng-if="!rutinas[0]">No hay rutinas para mostrar</p>                
         <ion-list class="item-border-off">
-            <ion-item collection-repeat="rutina in rutinas | filter:search" class="item-icon-right" type="item-text-wrap" href="#/tab/rutinas">
+            <ion-item collection-repeat="rutina in rutinas | filter:search" class="item-icon-right" type="item-text-wrap" href="#/tab/rutina-detalle/{{rutina.id}}">
                 <h3>
                     {{rutina.name}}
                 </h3>

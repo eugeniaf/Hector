@@ -1,9 +1,16 @@
-<ion-view view-title="Account">
+<ion-view view-title="Mi cuenta">
   <ion-content>
     <ion-list>
-    <ion-toggle  ng-model="settings.enableFriends">
-        Enable Friends
-    </ion-toggle>
+      <a class="item item-icon-left" href="#">
+        <i class="icon ion-ios-email"></i> Notificaciones
+        <span class="badge badge-assertive">0</span>
+      </a>      
+      <a class="item item-icon-left" href="#">
+        <i class="icon ion-ios-gear"></i> Configuración
+      </a>
+      <a class="item item-icon-left" href="#/login">
+        <i class="icon ion-ios-upload-outline"></i> Salir
+      </a>      
     </ion-list>
   </ion-content>
 </ion-view>

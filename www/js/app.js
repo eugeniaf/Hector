@@ -38,14 +38,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         templateUrl: "templates/login.html",
         controller: 'LoginCtrl'
       })
-      
+
       // SIGNUP DE APLICAIÓN
       .state('registro', {
         url: "/registro",
         cache: false,
         templateUrl: "templates/registro.html",
         controller: 'RegistroCtrl'
-      })      
+      })
 
       // setup an abstract state for the tabs directive
       .state('tab', {
@@ -64,17 +64,28 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           }
         }
       })
-      
+
       .state('tab.nuevaRutina', {
+        cache: false,
         url: '/nuevaRutina',
         views: {
-          'tab-nuevaRutina': {
+          'tab-rutinas': {
             templateUrl: 'templates/nuevaRutina.html',
-            controller: 'nuevaRutinaCtrl'
+            controller: 'NuevaRutinaCtrl'
           }
         }
-      })      
+      })
       
+      .state('tab.rutina-detalle', {
+        cache: false,
+        url: '/rutina-detalle/:rutinaId',
+        views: {
+          'tab-rutinas': {
+            templateUrl: 'templates/rutina-detalle.html'
+          }
+        }
+      })        
+
       // Calendario
       .state('tab.calendario', {
         url: '/calendario',
@@ -84,7 +95,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             controller: 'CalendarioCtrl'
           }
         }
-      })      
+      })
 
       // Each tab has its own nav history stack:
 
