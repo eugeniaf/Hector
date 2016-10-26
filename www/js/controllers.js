@@ -37,6 +37,9 @@ angular.module('starter.controllers', [])
   })
 
   .controller('CalendarioCtrl', function ($ionicLoading, $log, $scope, Rutinas, $ionicScrollDelegate) {
+    
+    console.log("CalendarioCtrl")
+    
     $scope.dia = '';
 
     $scope.domingo = function () {
@@ -73,7 +76,7 @@ angular.module('starter.controllers', [])
   })
 
   .controller('RutinasCtrl', function ($ionicLoading, $log, $scope, Rutinas, $ionicScrollDelegate) {
-
+    console.log("RutinasCtrl")
     var vm = this;
     activar()
 
@@ -84,8 +87,8 @@ angular.module('starter.controllers', [])
     function activar() {
       $ionicScrollDelegate.scrollTop()
       $scope.rutinas = Rutinas.all();
-      $scope.remove = function (comunicado) {
-        Rutinas.remove(comunicado);
+      $scope.remove = function (rutina) {
+        Rutinas.remove(rutina);
       };
     };
     //--- 
@@ -96,10 +99,27 @@ angular.module('starter.controllers', [])
     };
     //---    
 
+    function cambiarPerfil() {
+
+    }
+
   })
 
   .controller('NuevaRutinaCtrl', function ($scope) {
 
+  })
+
+  .controller('tabController', function ($scope) {
+    $scope.tabs = [
+      {
+        'title': 'Mis rutinas',
+        'href': '#/tab/rutinas',
+        'name': 'tab-rutinas'
+      }, {
+        'title': 'Calendario',
+        'href': '#/tab/calendario',
+        'name': 'tab-calendario'
+      }]
   })
 
   .controller('DashCtrl', function ($scope) { })
@@ -124,6 +144,7 @@ angular.module('starter.controllers', [])
   })
 
   .controller('AccountCtrl', function ($scope) {
+    console.log("AccountCtrl")
     $scope.settings = {
       enableFriends: true
     };
