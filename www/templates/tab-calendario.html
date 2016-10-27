@@ -1,4 +1,7 @@
 <ion-view view-title="Calendario">
+	<ion-nav-buttons side="right">
+        <a class="button button-icon icon ion-ios-heart" on-tap="cambiarPerfil()"></a>
+    </ion-nav-buttons>        
   <ion-content padding="true">
     <div class="button-bar">
       <a class="button button-icon" ng-class="{energized: dia=='D'}" on-tap="domingo()"><b>D</b></a>

@@ -3,15 +3,18 @@ Create tabs with an icon and label, using the tabs-positive style.
 Each tab's child <ion-nav-view> directive will have its own
 navigation history that also transitions its views in and out.
 -->
+<ion-nav-buttons side="right">
+      <a class="button button-icon icon ion-ios-heart" on-tap="cambiarPerfil()"></a>
+  </ion-nav-buttons>  
 <ion-tabs class="tabs-icon-top tabs-color-active-positive">
 
   <!-- Rutinas Tab -->
-  <ion-tab title="Mis rutinas" icon-off="ion-ios-stopwatch-outline" icon-on="ion-ios-stopwatch" href="#/tab/rutinas">
+  <ion-tab ng-if="atleta=='true'" title="Mis rutinas" icon-off="ion-ios-stopwatch-outline" icon-on="ion-ios-stopwatch" href="#/tab/rutinas">
     <ion-nav-view name="tab-rutinas"></ion-nav-view>
   </ion-tab>
   
   <!-- Calendario Tab --> 
-  <ion-tab ng-if="perfil == 'profesor'" title="Calendario" icon-off="ion-ios-calendar-outline" icon-on="ion-ios-calendar" href="#/tab/calendario">
+  <ion-tab ng-if="atleta=='false'" title="Calendario" icon-off="ion-ios-calendar-outline" icon-on="ion-ios-calendar" href="#/tab/calendario">
     <ion-nav-view name="tab-calendario"></ion-nav-view>
   </ion-tab>  
   
@@ -20,8 +23,7 @@ navigation history that also transitions its views in and out.
     <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>-->
 
-  {{atleta}}
-  <ion-tab ng-if="atleta" title="Prueba" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/account">
+  <ion-tab ng-if="atleta=='true'" title="Prueba" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/account">
     <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>
 
