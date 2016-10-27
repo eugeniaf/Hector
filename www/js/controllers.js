@@ -110,6 +110,7 @@ angular.module('starter.controllers', [])
   })
 
   .controller('tabController', function ($scope) {
+    $scope.activo = 'true';
     $scope.tabs = [
       {
         'title': 'Mis rutinas',

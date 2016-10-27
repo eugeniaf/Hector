@@ -60,8 +60,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         url: '/rutinas',
         views: {
           'tab-rutinas': {
-            templateUrl: 'templates/tab-rutinas.html',
-            controller: 'RutinasCtrl'
+            templateUrl: 'templates/tab-rutinas.html'
           }
         }
       })

@@ -5,26 +5,32 @@ navigation history that also transitions its views in and out.
 -->
 <ion-tabs class="tabs-icon-top tabs-color-active-positive">
 
-  <!-- Rutinas Tab 
+  <!-- Rutinas Tab -->
   <ion-tab title="Mis rutinas" icon-off="ion-ios-stopwatch-outline" icon-on="ion-ios-stopwatch" href="#/tab/rutinas">
     <ion-nav-view name="tab-rutinas"></ion-nav-view>
-  </ion-tab>-->
+  </ion-tab>
   
-  <!-- Calendario Tab 
+  <!-- Calendario Tab --> 
   <ion-tab title="Calendario" icon-off="ion-ios-calendar-outline" icon-on="ion-ios-calendar" href="#/tab/calendario">
     <ion-nav-view name="tab-calendario"></ion-nav-view>
-  </ion-tab>  -->
+  </ion-tab>  
   
-  <!-- Account Tab 
+  <!-- Account Tab  
   <ion-tab title="Perfil" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/account">
     <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>-->
 
-  <ion-tab ng-repeat="tab in tabs" title="{{tab.title}}" href="{{tab.href}}" icon="ion-home">
-    <dynamic-nav-view name="tab.name"></dynamic-nav-view>
-    <!--
-    <ion-view name="{{tab.name}}"></ion-view>-->
+  <!-- Prueba Tab --> 
+  <ion-tab ng-if="activo" title="Profe" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/account">
+    <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>
+
+<!--
+  <ion-tab ng-repeat="tab in tabs" title="{{tab.title}}" href="#/tab/rutinas" icon="ion-home">
+    <!--<dynamic-nav-view name="tab.name"></dynamic-nav-view>
+    
+    <ion-view name="{{tab.name}}"></ion-view>
+  </ion-tab>-->
 
 
 </ion-tabs>
