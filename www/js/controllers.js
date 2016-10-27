@@ -8,6 +8,7 @@ angular.module('starter.controllers', [])
     $scope.user = {}
 
     $localstorage.set("access_token", null)
+    $localstorage.set("atleta", true)
 
     // función que se ejecuta al presionar el boton Entrar, valida que las credenciales del usuario sean correctas
     $scope.signIn = function () {
@@ -25,6 +26,7 @@ angular.module('starter.controllers', [])
     $scope.user = {}
 
     $localstorage.set("access_token", null)
+    $localstorage.set("atleta", true)
 
     // función que se ejecuta al presionar el boton Entrar, valida que las credenciales del usuario sean correctas
     $scope.registrarse = function () {
@@ -75,8 +77,9 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('RutinasCtrl', function ($ionicLoading, $log, $scope, Rutinas, $ionicScrollDelegate) {
+  .controller('RutinasCtrl', function ($state, $ionicHistory, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
     console.log("RutinasCtrl")
+    
     var vm = this;
     activar()
 
@@ -99,8 +102,23 @@ angular.module('starter.controllers', [])
     };
     //---    
 
-    function cambiarPerfil() {
-
+    $scope.cambiarPerfil = function (){
+      
+      console.log("funcion cambiar perfil: " + $localstorage.get("atleta"))
+      if ($localstorage.get("atleta")==="true"){
+        console.log("es atleta")
+        $localstorage.set("atleta",false)
+      }else{
+        console.log("no es atleta")
+        $localstorage.set("atleta", true)
+      }
+      console.log($state.current)
+      //$state.go($state.current, {}, {reload: true});
+      
+      $ionicHistory.clearCache().then(function () {
+        $state.reload($state);
+      });
+      
     }
 
   })
@@ -109,8 +127,11 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('tabController', function ($scope) {
-    $scope.activo = 'true';
+
+  .controller('tabController', function ($scope, $localstorage) {
+    $scope.atleta = $localstorage.get("atleta");
+    console.log("en TabController es atleta: " + $scope.atleta);
+    $scope.mostrar = false;
     $scope.tabs = [
       {
         'title': 'Mis rutinas',

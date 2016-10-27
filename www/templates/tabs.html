@@ -11,7 +11,7 @@ navigation history that also transitions its views in and out.
   </ion-tab>
   
   <!-- Calendario Tab --> 
-  <ion-tab title="Calendario" icon-off="ion-ios-calendar-outline" icon-on="ion-ios-calendar" href="#/tab/calendario">
+  <ion-tab ng-if="perfil == 'profesor'" title="Calendario" icon-off="ion-ios-calendar-outline" icon-on="ion-ios-calendar" href="#/tab/calendario">
     <ion-nav-view name="tab-calendario"></ion-nav-view>
   </ion-tab>  
   
@@ -20,17 +20,10 @@ navigation history that also transitions its views in and out.
     <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>-->
 
-  <!-- Prueba Tab --> 
-  <ion-tab ng-if="activo" title="Profe" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/account">
+  {{atleta}}
+  <ion-tab ng-if="atleta" title="Prueba" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/account">
     <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>
-
-<!--
-  <ion-tab ng-repeat="tab in tabs" title="{{tab.title}}" href="#/tab/rutinas" icon="ion-home">
-    <!--<dynamic-nav-view name="tab.name"></dynamic-nav-view>
-    
-    <ion-view name="{{tab.name}}"></ion-view>
-  </ion-tab>-->
 
 
 </ion-tabs>
