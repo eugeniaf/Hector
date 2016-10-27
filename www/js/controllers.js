@@ -77,7 +77,7 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('RutinasCtrl', function ($ionicLoading, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
+  .controller('RutinasCtrl', function ($state, $ionicHistory, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
     console.log("RutinasCtrl")
     
     var vm = this;
@@ -112,6 +112,13 @@ angular.module('starter.controllers', [])
         console.log("no es atleta")
         $localstorage.set("atleta", true)
       }
+      console.log($state.current)
+      //$state.go($state.current, {}, {reload: true});
+      
+      $ionicHistory.clearCache().then(function () {
+        $state.reload($state);
+      });
+      
     }
 
   })

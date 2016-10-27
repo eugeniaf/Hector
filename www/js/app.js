@@ -57,6 +57,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
       // Mis rutinas
       .state('tab.rutinas', {
+        cache: false,
         url: '/rutinas',
         views: {
           'tab-rutinas': {
