@@ -87,16 +87,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
       })        
 
-      // Calendario
-      .state('tab.calendario', {
-        url: '/calendario',
+      // Calendario profe
+      .state('tab.calendarioProfe', {
+        url: '/calendarioProfe',
         views: {
-          'tab-calendario': {
-            templateUrl: 'templates/tab-calendario.html',
-            controller: 'CalendarioCtrl'
+          'tab-calendarioProfe': {
+            templateUrl: 'templates/tab-calendarioProfe.html',
+            controller: 'CalendarioProfeCtrl'
           }
         }
       })
+      
+      // Calendario atleta
+      .state('tab.calendarioAtleta', {
+        url: '/calendarioAtleta',
+        views: {
+          'tab-calendarioAtleta': {
+            templateUrl: 'templates/tab-calendarioAtleta.html',
+            controller: 'CalendarioAtletaCtrl'
+          }
+        }
+      })      
 
       // Each tab has its own nav history stack:
 

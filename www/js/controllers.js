@@ -38,9 +38,9 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('CalendarioCtrl', function ($ionicLoading, $rootScope, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
+  .controller('CalendarioAtletaCtrl', function ($ionicLoading, $rootScope, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
 
-    console.log("CalendarioCtrl")
+    console.log("CalendarioAtletaCtrl")
     
     $scope.cambiarPerfil = function () {
       console.log("funcion cambiar perfil: " + $localstorage.get("atleta"))
@@ -93,9 +93,83 @@ angular.module('starter.controllers', [])
     };
 
   })
+  
+.controller('CalendarioProfeCtrl', function ($ionicLoading, $rootScope, $localstorage, $log, $scope, Entrenamientos, $ionicScrollDelegate) {
+
+    console.log("CalendarioProfeCtrl")
+    
+    activar()
+
+    // esta funcion carga la lista de rutinas
+    function activar() {
+      $ionicScrollDelegate.scrollTop()
+      $scope.entrenamientos = Entrenamientos.all();
+      $scope.remove = function (entrenamiento) {
+        Entrenamientos.remove(entrenamiento);
+      };
+    };
+    //--- 
+
+    // esta funcion se usa para el refresh
+    $scope.refresh = function () {
+      activar()
+    };
+    //---       
+    
+    $scope.cambiarPerfil = function () {
+      console.log("funcion cambiar perfil: " + $localstorage.get("atleta"))
+      if ($localstorage.get("atleta") === "true") {
+        console.log("es atleta")
+        $localstorage.set("atleta", false)
+
+        $rootScope.sampleStatus = $localstorage.get("atleta");
+
+      } else {
+        console.log("no es atleta")
+        $localstorage.set("atleta", true)
+
+        $rootScope.sampleStatus = $localstorage.get("atleta");
+      }
+    }    
+    
+
+    $scope.dia = '';
+
+    $scope.domingo = function () {
+      $scope.dia = 'D';
+      //console.log("domingo");
+    };
+
+    $scope.lunes = function () {
+      $scope.dia = 'L';
+      //console.log("lunes");
+    };
+
+    $scope.martes = function () {
+      $scope.dia = 'M';
+      //console.log("martes");
+    };
+
+    $scope.miercoles = function () {
+      $scope.dia = 'X';
+    };
+
+    $scope.jueves = function () {
+      $scope.dia = 'J';
+    };
+
+    $scope.viernes = function () {
+      $scope.dia = 'V';
+    };
+
+    $scope.sabado = function () {
+      $scope.dia = 'S';
+    };
+
+  })  
 
   .controller('RutinasCtrl', function ($state, $rootScope, $ionicHistory, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
-    console.log("RutinasCtrl")
+    console.log(">>>RutinasCtrl")
 
     var vm = this;
     activar()
@@ -153,6 +227,8 @@ angular.module('starter.controllers', [])
 
     
     console.log("en TabController es atleta: " + $scope.atleta);
+    
+    /*
     $scope.mostrar = false;
     $scope.tabs = [
       {
@@ -163,7 +239,7 @@ angular.module('starter.controllers', [])
         'title': 'Calendario',
         'href': '#/tab/calendario',
         'name': 'tab-calendario'
-      }]
+      }]*/
   })
 
   .controller('DashCtrl', function ($scope) { })
@@ -205,7 +281,7 @@ angular.module('starter.controllers', [])
       }
     }   
         
-    console.log("AccountCtrl")
+    console.log(">>>AccountCtrl")
     $scope.settings = {
       enableFriends: true
     };

@@ -19,6 +19,50 @@ angular.module('starter.services', [])
     }
   }])
 
+  .factory('Entrenamientos', function () {
+    // Might use a resource here that returns a JSON array
+
+    // Some fake testing data
+    var entrenamientos = [{
+      id: 0,
+      username: 'Eugenia',
+      rutinas: [{
+        id: 0,
+        name: 'Esta es la primer rutina'
+      }, {
+          id: 1,
+          name: 'Esta es la segunda rutina'
+        }]
+    }, {
+        id: 0,
+        username: 'Martín',
+        rutinas: [{
+          id: 0,
+          name: 'Esta es la primer rutina'
+        }, {
+            id: 1,
+            name: 'Esta es la segunda rutina'
+          }]
+      }];
+
+    return {
+      all: function () {
+        return entrenamientos;
+      },
+      remove: function (entrenamiento) {
+        entrenamientos.splice(chats.indexOf(entrenamiento), 1);
+      },
+      get: function (entrenamientoId) {
+        for (var i = 0; i < entrenamientos.length; i++) {
+          if (entrenamientos[i].id === parseInt(entrenamientoId)) {
+            return entrenamientos[i];
+          }
+        }
+        return null;
+      }
+    };
+  })
+
   .factory('Rutinas', function () {
     // Might use a resource here that returns a JSON array
 
