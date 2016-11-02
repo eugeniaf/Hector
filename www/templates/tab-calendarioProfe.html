@@ -1,7 +1,11 @@
 <ion-view view-title="Calendario">
   <ion-nav-buttons side="right">
-    <a class="button button-icon icon ion-ios-heart" on-tap="cambiarPerfil()"></a>
+    <a class="button button-icon icon ion-ios-plus" on-tap="enviarEntrenamiento()"></a>
   </ion-nav-buttons>
+  <!--
+  <ion-footer-bar class="bar ">
+    <button class="button button-full button-energized" on-tap="registrarse()">Registrarte</button>
+  </ion-footer-bar>-->
   <ion-content padding="true">
     <div class="button-bar">
       <a class="button button-icon" ng-class="{energized: dia=='D'}" on-tap="domingo()"><b>D</b></a>
@@ -14,18 +18,12 @@
     </div>
     <div>
       <p class="text text-center" ng-if="!entrenamientos[0]">No hay entrenamientos para mostrar</p>
-      <ion-list class="item-border-off">
+      <ion-list>
         <ion-item collection-repeat="entrenamiento in entrenamientos | filter:search" class="item-icon-right" type="item-text-wrap"
           href="#/tab/rutinas">
-          <h3>
-            <b>{{entrenamiento.username}}</b>
-          </h3>
+          {{entrenamiento.username}}
           <i class="icon ion-chevron-right icon-accessory"></i>
         </ion-item>
-
       </ion-list>
-      <button class="button button-block button-energized" on-tap="registrarse()">
-        
-      </button>
   </ion-content>
 </ion-view>
