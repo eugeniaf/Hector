@@ -66,27 +66,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
       })
 
-      .state('tab.nuevaRutina', {
-        cache: false,
-        url: '/nuevaRutina',
-        views: {
-          'tab-rutinas': {
-            templateUrl: 'templates/nuevaRutina.html',
-            controller: 'NuevaRutinaCtrl'
-          }
-        }
-      })
-      
-      .state('tab.rutina-detalle', {
-        cache: false,
-        url: '/rutina-detalle/:rutinaId',
-        views: {
-          'tab-rutinas': {
-            templateUrl: 'templates/rutina-detalle.html'
-          }
-        }
-      })        
-
       // Calendario profe
       .state('tab.calendarioProfe', {
         url: '/calendarioProfe',
@@ -97,6 +76,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           }
         }
       })
+      
+      .state('tab.nuevoEntrenamiento', {
+        url: '/nuevoEntrenamiento',
+        views: {
+          'tab-calendarioProfe': {
+            templateUrl: 'templates/nuevoEntrenamiento.html',
+            controller: 'NuevoEntrenamientoCtrl'
+          }
+        }
+      })
+      
+      .state('tab.entrenamiento-detalle', {
+        cache: false,
+        url: '/entrenamiento-detalle/:entrenamientoId',
+        views: {
+          'tab-calendarioProfe': {
+            templateUrl: 'templates/entrenamiento-detalle.html',
+            controller: 'EntrenamientoDetalleCtrl'
+          }
+        }
+      })                    
       
       // Calendario atleta
       .state('tab.calendarioAtleta', {

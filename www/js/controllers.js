@@ -41,7 +41,7 @@ angular.module('starter.controllers', [])
   .controller('CalendarioAtletaCtrl', function ($ionicLoading, $rootScope, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
 
     console.log("CalendarioAtletaCtrl")
-    
+
     $scope.cambiarPerfil = function () {
       console.log("funcion cambiar perfil: " + $localstorage.get("atleta"))
       if ($localstorage.get("atleta") === "true") {
@@ -56,8 +56,8 @@ angular.module('starter.controllers', [])
 
         $rootScope.sampleStatus = $localstorage.get("atleta");
       }
-    }    
-    
+    }
+
 
     $scope.dia = '';
 
@@ -93,11 +93,11 @@ angular.module('starter.controllers', [])
     };
 
   })
-  
-.controller('CalendarioProfeCtrl', function ($ionicLoading, $rootScope, $localstorage, $log, $scope, Entrenamientos, $ionicScrollDelegate) {
+
+  .controller('CalendarioProfeCtrl', function ($ionicLoading, $state, $rootScope, $localstorage, $log, $scope, Entrenamientos, $ionicScrollDelegate) {
 
     console.log("CalendarioProfeCtrl")
-    
+
     activar()
 
     // esta funcion carga la lista de rutinas
@@ -115,7 +115,7 @@ angular.module('starter.controllers', [])
       activar()
     };
     //---       
-    
+
     $scope.cambiarPerfil = function () {
       console.log("funcion cambiar perfil: " + $localstorage.get("atleta"))
       if ($localstorage.get("atleta") === "true") {
@@ -130,8 +130,13 @@ angular.module('starter.controllers', [])
 
         $rootScope.sampleStatus = $localstorage.get("atleta");
       }
-    }    
-    
+    }
+
+    $scope.nuevoEntrenamiento = function () {
+      $state.go('tab.nuevoEntrenamiento')
+      console.log("nuevoEntrenamiento")
+    }
+
 
     $scope.dia = '';
 
@@ -166,7 +171,32 @@ angular.module('starter.controllers', [])
       $scope.dia = 'S';
     };
 
-  })  
+  })
+
+  .controller('NuevoEntrenamientoCtrl', function ($state, $scope) {
+
+    console.log('NuevoEntrenamientoCtrl')
+    $scope.continuar = function () {
+      $state.go('tab.entrenamiento-detalle')
+    }
+
+  })
+
+  .controller('EntrenamientoDetalleCtrl', function ($state, $stateParams, Entrenamientos, $scope) {
+
+    console.log('EntrenamientoDetalleCtrl')
+    var atletaId = 0;//$stateParams.atletaId;
+    //console.log('$stateParams.atletaId: ', $stateParams.atletaId);
+    console.log('Entrenamientos: ', JSON.stringify(Entrenamientos.all()));
+
+    activar()
+
+    // funcion que carga la lista de entrenamientos de un atleta
+    function activar() {
+      console.log("CLOG" + JSON.stringify(Entrenamientos.get(/*atletaId*/0)));  
+      $scope.entrenamientos = Entrenamientos.all(); //Entrenamientos.get(/*atletaId*/0);
+    };
+  })
 
   .controller('RutinasCtrl', function ($state, $rootScope, $ionicHistory, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
     console.log(">>>RutinasCtrl")
@@ -212,10 +242,6 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('NuevaRutinaCtrl', function ($scope) {
-
-  })
-
 
   .controller('tabController', function ($scope, $rootScope, $localstorage) {
     $scope.atleta = $localstorage.get("atleta");
@@ -225,9 +251,9 @@ angular.module('starter.controllers', [])
       console.log("tabController: $scope.atleta " + $scope.atleta)
     })
 
-    
+
     console.log("en TabController es atleta: " + $scope.atleta);
-    
+
     /*
     $scope.mostrar = false;
     $scope.tabs = [
@@ -264,7 +290,7 @@ angular.module('starter.controllers', [])
   })
 
   .controller('AccountCtrl', function ($scope) {
-    
+
     $scope.cambiarPerfil = function () {
       console.log("funcion cambiar perfil: " + $localstorage.get("atleta"))
       if ($localstorage.get("atleta") === "true") {
@@ -279,8 +305,8 @@ angular.module('starter.controllers', [])
 
         $rootScope.sampleStatus = $localstorage.get("atleta");
       }
-    }   
-        
+    }
+
     console.log(">>>AccountCtrl")
     $scope.settings = {
       enableFriends: true
