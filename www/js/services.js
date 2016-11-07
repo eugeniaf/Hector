@@ -87,7 +87,7 @@ angular.module('starter.services', [])
       get: function (entrenamientoId) {
         for (var i = 0; i < entrenamientos.length; i++) {
           if (entrenamientos[i].id === parseInt(entrenamientoId)) {
-            console.log(entrenamientos[i]);
+            //console.log(entrenamientos[i]);
             return entrenamientos[i];
             
           }

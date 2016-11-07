@@ -5,12 +5,14 @@
         </ion-nav-back-button>
     </ion-nav-bar>
     <ion-content>
-        <label class="item item-input">
+        <ion-item>
+            <label class="item item-input">
             <span class="input-label">Fecha</span>
             <input type="date">
         </label>
-        <ion-item>
-            <ion-textarea rows="10" placeholder="Ingresa una descripción"></ion-textarea>
+            <label class="item item-input item-stacked-label">
+                <textarea id='textAreaEntrenamiento' rows="5" ng-keypress="updateEditor()" placeholder="Descripción" ng-model="descripcion"></textarea>
+            </label>
         </ion-item>
         <button class="button button-block button-balanced" on-tap="continuar()">
             Continuar

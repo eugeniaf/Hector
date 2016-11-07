@@ -182,20 +182,64 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('EntrenamientoDetalleCtrl', function ($state, $stateParams, Entrenamientos, $scope) {
+  .controller('EntrenamientoDetalleCtrl', function ($state, $stateParams, Entrenamientos, $scope, $ionicModal) {
 
     console.log('EntrenamientoDetalleCtrl')
+
+    // Load the add / change dialog from the given template URL
+    $ionicModal.fromTemplateUrl('templates/agregarEjercicioDialog.html', function (modal) {
+      $scope.addDialog = modal;
+    }, {
+        scope: $scope,
+        animation: 'slide-in-up'
+      });
+
+    $scope.showAddChangeDialog = function (action) {
+      $scope.action = action;
+      $scope.addDialog.show();
+    };
+
+    $scope.leaveAddChangeDialog = function () {
+      // Remove dialog 
+      $scope.addDialog.remove();
+      // Reload modal template to have cleared form
+      $ionicModal.fromTemplateUrl('add-change-dialog.html', function (modal) {
+        $scope.addDialog = modal;
+      }, {
+          scope: $scope,
+          animation: 'slide-in-up'
+        });
+    };
+    $scope.nuevo = function () {
+      $scope.showAddChangeDialog('add');
+    }
+    // Define item buttons
+    $scope.itemButtons = [{
+      text: 'Delete',
+      type: 'button-assertive',
+      onTap: function (item) {
+        $scope.removeItem(item);
+      }
+    }, {
+        text: 'Edit',
+        type: 'button-calm',
+        onTap: function (item) {
+          $scope.showEditItem(item);
+        }
+      }];
+
     var atletaId = 0;//$stateParams.atletaId;
     //console.log('$stateParams.atletaId: ', $stateParams.atletaId);
-    console.log('Entrenamientos: ', JSON.stringify(Entrenamientos.all()));
+   // console.log('Entrenamientos: ', JSON.stringify(Entrenamientos.all()));
 
     activar()
 
     // funcion que carga la lista de entrenamientos de un atleta
     function activar() {
-      console.log("CLOG" + JSON.stringify(Entrenamientos.get(/*atletaId*/0)));  
+    //  console.log("CLOG" + JSON.stringify(Entrenamientos.get(/*atletaId*/0)));
       $scope.entrenamientos = Entrenamientos.all(); //Entrenamientos.get(/*atletaId*/0);
     };
+
   })
 
   .controller('RutinasCtrl', function ($state, $rootScope, $ionicHistory, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
