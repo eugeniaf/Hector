@@ -228,15 +228,36 @@ angular.module('starter.controllers', [])
         }
       }];
 
+    $scope.addItem = function (form) {
+      var newItem = {};
+      // Add values from form to object
+      newItem.description = form.description.$modelValue;
+      newItem.useAsDefault = form.useAsDefault.$modelValue;
+      // If this is the first item it will be the default item
+      if ($scope.list.length == 0) {
+        newItem.useAsDefault = true;
+      } else {
+        // Remove old default entry from list	
+        if (newItem.useAsDefault) {
+          removeDefault();
+        }
+      }
+      // Save new list in scope and factory
+      $scope.list.push(newItem);
+      ListFactory.setList($scope.list);
+      // Close dialog
+      $scope.leaveAddChangeDialog();
+    };
+
     var atletaId = 0;//$stateParams.atletaId;
     //console.log('$stateParams.atletaId: ', $stateParams.atletaId);
-   // console.log('Entrenamientos: ', JSON.stringify(Entrenamientos.all()));
+    // console.log('Entrenamientos: ', JSON.stringify(Entrenamientos.all()));
 
     activar()
 
     // funcion que carga la lista de entrenamientos de un atleta
     function activar() {
-    //  console.log("CLOG" + JSON.stringify(Entrenamientos.get(/*atletaId*/0)));
+      //  console.log("CLOG" + JSON.stringify(Entrenamientos.get(/*atletaId*/0)));
       $scope.entrenamientos = Entrenamientos.all(); //Entrenamientos.get(/*atletaId*/0);
     };
 
