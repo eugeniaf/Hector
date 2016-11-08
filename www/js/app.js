@@ -57,46 +57,57 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
       // Mis rutinas
       .state('tab.rutinas', {
+        cache: false,
         url: '/rutinas',
         views: {
           'tab-rutinas': {
-            templateUrl: 'templates/tab-rutinas.html',
-            controller: 'RutinasCtrl'
+            templateUrl: 'templates/tab-rutinas.html'
           }
         }
       })
 
-      .state('tab.nuevaRutina', {
-        cache: false,
-        url: '/nuevaRutina',
+      // Calendario profe
+      .state('tab.calendarioProfe', {
+        url: '/calendarioProfe',
         views: {
-          'tab-rutinas': {
-            templateUrl: 'templates/nuevaRutina.html',
-            controller: 'NuevaRutinaCtrl'
+          'tab-calendarioProfe': {
+            templateUrl: 'templates/tab-calendarioProfe.html',
+            controller: 'CalendarioProfeCtrl'
           }
         }
       })
       
-      .state('tab.rutina-detalle', {
-        cache: false,
-        url: '/rutina-detalle/:rutinaId',
+      .state('tab.nuevoEntrenamiento', {
+        url: '/nuevoEntrenamiento',
         views: {
-          'tab-rutinas': {
-            templateUrl: 'templates/rutina-detalle.html'
-          }
-        }
-      })        
-
-      // Calendario
-      .state('tab.calendario', {
-        url: '/calendario',
-        views: {
-          'tab-calendario': {
-            templateUrl: 'templates/tab-calendario.html',
-            controller: 'CalendarioCtrl'
+          'tab-calendarioProfe': {
+            templateUrl: 'templates/nuevoEntrenamiento.html',
+            controller: 'NuevoEntrenamientoCtrl'
           }
         }
       })
+      
+      .state('tab.entrenamiento-detalle', {
+        cache: false,
+        url: '/entrenamiento-detalle/:entrenamientoId',
+        views: {
+          'tab-calendarioProfe': {
+            templateUrl: 'templates/entrenamiento-detalle.html',
+            controller: 'EntrenamientoDetalleCtrl'
+          }
+        }
+      })                    
+      
+      // Calendario atleta
+      .state('tab.calendarioAtleta', {
+        url: '/calendarioAtleta',
+        views: {
+          'tab-calendarioAtleta': {
+            templateUrl: 'templates/tab-calendarioAtleta.html',
+            controller: 'CalendarioAtletaCtrl'
+          }
+        }
+      })      
 
       // Each tab has its own nav history stack:
 
