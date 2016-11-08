@@ -182,7 +182,7 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('EntrenamientoDetalleCtrl', function ($state, $stateParams, Entrenamientos, $scope, $ionicModal) {
+  .controller('EntrenamientoDetalleCtrl', function ($state, $stateParams, Ejercicios, $scope, $ionicModal) {
 
     console.log('EntrenamientoDetalleCtrl')
 
@@ -258,7 +258,7 @@ angular.module('starter.controllers', [])
     // funcion que carga la lista de entrenamientos de un atleta
     function activar() {
       //  console.log("CLOG" + JSON.stringify(Entrenamientos.get(/*atletaId*/0)));
-      $scope.entrenamientos = Entrenamientos.all(); //Entrenamientos.get(/*atletaId*/0);
+      $scope.ejercicios = Ejercicios.all(); //Entrenamientos.get(/*atletaId*/0);
     };
 
   })
