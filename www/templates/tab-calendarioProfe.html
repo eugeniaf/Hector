@@ -2,10 +2,6 @@
   <ion-nav-buttons side="right">
     <a class="button button-icon icon ion-ios-plus" on-tap="nuevoEntrenamiento()"></a>
   </ion-nav-buttons>
-  <!--
-  <ion-footer-bar class="bar ">
-    <button class="button button-full button-energized" on-tap="registrarse()">Registrarte</button>
-  </ion-footer-bar>-->
   <ion-content padding="true">
     <div class="button-bar">
       <a class="button button-icon" ng-class="{energized: dia=='D'}" on-tap="domingo()"><b>D</b></a>
@@ -20,8 +16,8 @@
       <p class="text text-center" ng-if="!entrenamientos[0]">No hay entrenamientos para mostrar</p>
       <ion-list>
         <ion-item collection-repeat="entrenamiento in entrenamientos | filter:search" class="item-icon-right" type="item-text-wrap"
-          href="#/tab/rutinas">
-          {{entrenamiento.username}}
+          href="#/tab/entrenamiento-detalle/{{entrenamientoId}}"> 
+          {{entrenamiento.atleta}}
           <i class="icon ion-chevron-right icon-accessory"></i>
         </ion-item>
       </ion-list>

@@ -23,27 +23,31 @@ angular.module('starter.services', [])
     // Might use a resource here that returns a JSON array
 
     // Some fake testing data
-    var entrenamientos = [{
-      id: 0,
-      username: 'Eugenia',
-      rutinas: [{
+    var entrenamientos = [{ id: 0,
+      profesor: 'Carlos',
+      fecha: '2016-11-09',       
+      items: [{
         id: 0,
-        name: 'Esta es la primer rutina'
-      }, {
-          id: 1,
-          name: 'Esta es la segunda rutina'
-        }]
-    }, {
-        id: 0,
-        username: 'Martín',
+        atleta: 'Eugenia',
         rutinas: [{
           id: 0,
-          name: 'Esta es la primer rutina'
+          name: 'Esta es la primer rutina de Eugenia'
         }, {
             id: 1,
-            name: 'Esta es la segunda rutina'
+            name: 'Esta es la segunda rutina de Eugenia'
           }]
-      }];
+        }, {
+          id: 1,
+          atleta: 'Martín',
+          rutinas: [{
+            id: 0,
+            name: 'Esta es la primer rutina de Martín'
+          }, {
+              id: 1,
+              name: 'Esta es la segunda rutina de Martín'
+            }]
+      }]
+    }];
 
     return {
       all: function () {
@@ -59,10 +63,20 @@ angular.module('starter.services', [])
           }
         }
         return null;
+      },
+      getFecha: function (fecha, profesor) {
+
+        for (var i = 0; i < entrenamientos.length; i++) {
+          //console.log("entrenamientos[i]: " + JSON.stringify(entrenamientos[i].items))
+          if (entrenamientos[i].fecha === fecha && entrenamientos[i].profesor === profesor) {
+            return entrenamientos[i].items;
+          }
+        }
+        return null;
       }
     };
   })
-  
+
   .factory('Ejercicios', function () {
     // Might use a resource here that returns a JSON array
 
@@ -87,15 +101,14 @@ angular.module('starter.services', [])
       get: function (entrenamientoId) {
         for (var i = 0; i < entrenamientos.length; i++) {
           if (entrenamientos[i].id === parseInt(entrenamientoId)) {
-            //console.log(entrenamientos[i]);
             return entrenamientos[i];
-            
+
           }
         }
         return null;
       }
     };
-  })  
+  })
 
   .factory('Rutinas', function () {
     // Might use a resource here that returns a JSON array
@@ -128,8 +141,8 @@ angular.module('starter.services', [])
       }
     };
   })
-  
-  
+
+
 
   .factory('Chats', function () {
     // Might use a resource here that returns a JSON array

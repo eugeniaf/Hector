@@ -15,7 +15,14 @@ angular.module('starter.controllers', [])
 
       $ionicHistory.clearHistory()
       $ionicHistory.clearCache().then(function () {
-        $state.go('tab.rutinas')
+        if ($localstorage.get("atleta")) {
+          //$state.go('tab.entrenamientoAtleta')
+          $state.go('tab.calendarioProfe')
+        }
+        else {
+          $state.go('tab.calendarioProfe')
+        }
+
       });
     };
     //---        
@@ -58,52 +65,26 @@ angular.module('starter.controllers', [])
       }
     }
 
-
-    $scope.dia = '';
-
-    $scope.domingo = function () {
-      $scope.dia = 'D';
-      //console.log("domingo");
-    };
-
-    $scope.lunes = function () {
-      $scope.dia = 'L';
-      //console.log("lunes");
-    };
-
-    $scope.martes = function () {
-      $scope.dia = 'M';
-      //console.log("martes");
-    };
-
-    $scope.miercoles = function () {
-      $scope.dia = 'X';
-    };
-
-    $scope.jueves = function () {
-      $scope.dia = 'J';
-    };
-
-    $scope.viernes = function () {
-      $scope.dia = 'V';
-    };
-
-    $scope.sabado = function () {
-      $scope.dia = 'S';
-    };
+    // Obtengo el día en la semana donde me ubico
+    diaSemana($scope);
 
   })
 
   .controller('CalendarioProfeCtrl', function ($ionicLoading, $state, $rootScope, $localstorage, $log, $scope, Entrenamientos, $ionicScrollDelegate) {
 
     console.log("CalendarioProfeCtrl")
+    $scope.atletaId = 0;
+    
+    // Obtengo el día en la semana donde me ubico
+    diaSemana($scope);
 
     activar()
 
     // esta funcion carga la lista de rutinas
     function activar() {
       $ionicScrollDelegate.scrollTop()
-      $scope.entrenamientos = Entrenamientos.all();
+      $scope.entrenamientos = Entrenamientos.getFecha($scope.fecha, 'Carlos');
+      console.log(JSON.stringify($scope.entrenamientos))
       $scope.remove = function (entrenamiento) {
         Entrenamientos.remove(entrenamiento);
       };
@@ -137,40 +118,6 @@ angular.module('starter.controllers', [])
       console.log("nuevoEntrenamiento")
     }
 
-
-    $scope.dia = '';
-
-    $scope.domingo = function () {
-      $scope.dia = 'D';
-      //console.log("domingo");
-    };
-
-    $scope.lunes = function () {
-      $scope.dia = 'L';
-      //console.log("lunes");
-    };
-
-    $scope.martes = function () {
-      $scope.dia = 'M';
-      //console.log("martes");
-    };
-
-    $scope.miercoles = function () {
-      $scope.dia = 'X';
-    };
-
-    $scope.jueves = function () {
-      $scope.dia = 'J';
-    };
-
-    $scope.viernes = function () {
-      $scope.dia = 'V';
-    };
-
-    $scope.sabado = function () {
-      $scope.dia = 'S';
-    };
-
   })
 
   .controller('NuevoEntrenamientoCtrl', function ($state, $scope) {
@@ -185,7 +132,7 @@ angular.module('starter.controllers', [])
   .controller('EntrenamientoDetalleCtrl', function ($state, $stateParams, Ejercicios, $scope, $ionicModal) {
 
     console.log('EntrenamientoDetalleCtrl')
-
+/*
     // Load the add / change dialog from the given template URL
     $ionicModal.fromTemplateUrl('templates/agregarEjercicioDialog.html', function (modal) {
       $scope.addDialog = modal;
@@ -247,14 +194,14 @@ angular.module('starter.controllers', [])
       ListFactory.setList($scope.list);
       // Close dialog
       $scope.leaveAddChangeDialog();
-    };
+    };*/
 
     var atletaId = 0;//$stateParams.atletaId;
     //console.log('$stateParams.atletaId: ', $stateParams.atletaId);
     // console.log('Entrenamientos: ', JSON.stringify(Entrenamientos.all()));
 
     activar()
-
+console.log(JSON.stringify(Ejercicios.all()))
     // funcion que carga la lista de entrenamientos de un atleta
     function activar() {
       //  console.log("CLOG" + JSON.stringify(Entrenamientos.get(/*atletaId*/0)));
@@ -377,3 +324,43 @@ angular.module('starter.controllers', [])
       enableFriends: true
     };
   });
+
+function diaSemana($scope) {
+  
+  // -- Obtengo el día de la semana donde me ubico
+  $scope.fecha = new Date();
+  
+  dias = new Array('D', 'L', 'M', 'X', 'J', 'V', 'S')
+  $scope.dia = dias[$scope.fecha.getDay()]
+  
+  $scope.fecha = '2016-11-09' //new Date();
+
+  $scope.domingo = function () {
+    $scope.dia = 'D';
+  };
+
+  $scope.lunes = function () {
+    $scope.dia = 'L';
+  };
+
+  $scope.martes = function () {
+    $scope.dia = 'M';
+  };
+
+  $scope.miercoles = function () {
+    $scope.dia = 'X';
+  };
+
+  $scope.jueves = function () {
+    $scope.dia = 'J';
+  };
+
+  $scope.viernes = function () {
+    $scope.dia = 'V';
+  };
+
+  $scope.sabado = function () {
+    $scope.dia = 'S';
+  };
+  
+}
