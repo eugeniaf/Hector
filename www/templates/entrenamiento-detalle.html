@@ -1,13 +1,16 @@
-<ion-view view-title="Entrenamientos">
+<ion-view view-title="Ejercicios">
     <ion-nav-buttons side="right">
-        <button class="right button button-icon icon ion-plus" on-tap="nuevo()"></button>
+        <a class="button button-icon icon ion-ios-plus" on-tap="nuevo()"></a>
     </ion-nav-buttons>
     <ion-content>
-        <!-- Lista de rutinas y ejercicios -->
-            <ion-list>
-                <ion-item ng-repeat="entrenamiento in entrenamientos">
-                    {{entrenamiento.name}}
-                </ion-item>
-            </ion-list>
+        <!--Lista de rutinas y ejercicios-->
+        <ion-list>
+            <ion-item ng-repeat="item in ejercicios">
+                {{item.name}}
+                <ion-option-button class="button-info" ng-click="edit(item)">
+                    Edit
+                </ion-option-button>
+            </ion-item>
+        </ion-list>
     </ion-content>
 </ion-view>
