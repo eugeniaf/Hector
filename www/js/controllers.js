@@ -2,7 +2,7 @@ angular.module('starter.controllers', [])
 
   //***** CONTROLADOR LOGIN
   //************************************************
-  .controller('LoginCtrl', function ($scope, $state, $ionicLoading, $ionicPopup, $ionicHistory, $localstorage) {
+  .controller('LoginCtrl', function ($scope, login, $state, $ionicLoading, $ionicPopup, $ionicHistory, $localstorage) {
 
     // se crea la estructura user, luego aquí se reciben el usuario y la contraseña
     $scope.user = {}
@@ -12,18 +12,34 @@ angular.module('starter.controllers', [])
 
     // función que se ejecuta al presionar el boton Entrar, valida que las credenciales del usuario sean correctas
     $scope.signIn = function () {
-
-      $ionicHistory.clearHistory()
-      $ionicHistory.clearCache().then(function () {
-        if ($localstorage.get("atleta")) {
-          //$state.go('tab.entrenamientoAtleta')
-          $state.go('tab.calendarioProfe')
-        }
-        else {
-          $state.go('tab.calendarioProfe')
-        }
-
-      });
+      
+            $ionicLoading.show({
+                template: 'Ingresando'
+            })
+            
+            // ejecuta el servicio login
+            login.in($scope.user.nombre, $scope.user.pass, function (err, valid) {
+                $ionicLoading.hide();
+                if (!valid) {
+                    $ionicPopup.alert({
+                        title: 'Upps',
+                        template: 'Usuario o contraseña incorrecta'
+                    });
+                }                
+                // si las credenciales son correctas, borro el historial y navego a la pantalla de inicio
+                if (valid) {
+                    $ionicHistory.clearHistory()                  
+                    $ionicHistory.clearCache().then(function(){
+                      if ($localstorage.get("atleta")) {
+                        //$state.go('tab.entrenamientoAtleta')
+                        $state.go('tab.calendarioProfe')
+                      }
+                      else {
+                        $state.go('tab.calendarioProfe')
+                      }
+                    });                  
+                };
+            });                  
     };
     //---        
   })
@@ -70,7 +86,7 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('CalendarioProfeCtrl', function ($ionicLoading, $state, $rootScope, $localstorage, $log, $scope, Entrenamientos, $ionicScrollDelegate) {
+  .controller('CalendarioProfeCtrl', function ($ionicLoading, $http, $state, $rootScope, $localstorage, $log, $scope, Entrenamientos, $ionicScrollDelegate) {
 
     console.log("CalendarioProfeCtrl")
     $scope.atletaId = 0;
@@ -82,12 +98,39 @@ angular.module('starter.controllers', [])
 
     // esta funcion carga la lista de rutinas
     function activar() {
+     /* $ionicLoading.show({
+          template: 'Cargando'
+      })*/
       $ionicScrollDelegate.scrollTop()
-      $scope.entrenamientos = Entrenamientos.getFecha($scope.fecha, 'Carlos');
+           
+      // ejecuta servicio
+      var config = {headers: 
+                    {'x-access-token': $localstorage.get("access_token")}
+                  }
+      $http.get('https://hectorapi.herokuapp.com/api/yo',config).then(function(resp){
+        console.log('Success', resp.data); // JSON object
+      }, function(err){
+        console.error('ERR', err);
+      })      
+          
+      /*
+      $sails.get('/reporte/obtenerDeAlumno?alumnoId='+$stateParams.alumnoId)
+      .success(function (data, status, headers, jwr) {
+          $scope.entrenamientos = data
+          console.log(JSON.stringify($scope.entrenamientos))
+          $ionicLoading.hide();
+      })
+      .error(function (data, status, headers, jwr) {
+          $ionicLoading.hide();
+      });*/       
+      
+      
+      //$scope.entrenamientos = Entrenamientos.getFecha($scope.fecha, 'Carlos');
+      /*
       console.log(JSON.stringify($scope.entrenamientos))
       $scope.remove = function (entrenamiento) {
         Entrenamientos.remove(entrenamiento);
-      };
+      };*/
     };
     //--- 
 
@@ -115,16 +158,27 @@ angular.module('starter.controllers', [])
 
     $scope.nuevoEntrenamiento = function () {
       $state.go('tab.nuevoEntrenamiento')
-      console.log("nuevoEntrenamiento")
     }
 
   })
 
-  .controller('NuevoEntrenamientoCtrl', function ($state, $scope) {
-
+  .controller('NuevoEntrenamientoCtrl', function ($state, $scope, Ejercicios) {
+    $scope.listaEjercicios = false;
     console.log('NuevoEntrenamientoCtrl')
+    console.log($scope.listaEjercicios)
     $scope.continuar = function () {
-      $state.go('tab.entrenamiento-detalle')
+      $scope.listaEjercicios = true;
+      console.log($scope.listaEjercicios)
+      
+      var atletaId = 0;//$stateParams.atletaId;
+
+      activar()
+      console.log(JSON.stringify(Ejercicios.all()))
+      // funcion que carga la lista de entrenamientos de un atleta
+      function activar() {
+        $scope.ejercicios = Ejercicios.all(); //Entrenamientos.get(/*atletaId*/0);
+      };      
+      
     }
 
   })
@@ -262,22 +316,7 @@ console.log(JSON.stringify(Ejercicios.all()))
       $scope.atleta = $localstorage.get("atleta");
       console.log("tabController: $scope.atleta " + $scope.atleta)
     })
-
-
     console.log("en TabController es atleta: " + $scope.atleta);
-
-    /*
-    $scope.mostrar = false;
-    $scope.tabs = [
-      {
-        'title': 'Mis rutinas',
-        'href': '#/tab/rutinas',
-        'name': 'tab-rutinas'
-      }, {
-        'title': 'Calendario',
-        'href': '#/tab/calendario',
-        'name': 'tab-calendario'
-      }]*/
   })
 
   .controller('DashCtrl', function ($scope) { })

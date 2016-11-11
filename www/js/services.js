@@ -76,6 +76,32 @@ angular.module('starter.services', [])
       }
     };
   })
+  
+    //****** SERVICIOS DE LOGIN
+    //************************************
+    .factory('login', function ($http, $localstorage) {
+        
+        // servicio expuesto
+        return {
+            // se conecta a la API y valida las credenciales de un usuario
+            in: function (nombre, contrasena, callback) {
+                var header = {headers: {'Content-Type': 'application/json'}}
+                var body = JSON.stringify({
+                  nombre: nombre,
+                  contrasena: contrasena
+                });
+                $http.post('https://hectorapi.herokuapp.com/api/authenticate', body, header).then(function(resp){
+                  console.log('Success', resp.data); // JSON object
+                    $localstorage.set("access_token", resp.data.token)
+                    return callback(null, true)                  
+                }, function(err){
+                  alert("Error!")
+                  console.error('ERR', err);
+                  return callback("Intente más tarde", false)
+                })
+            }
+        }
+    })
 
   .factory('Ejercicios', function () {
     // Might use a resource here that returns a JSON array

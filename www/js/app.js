@@ -81,8 +81,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         url: '/nuevoEntrenamiento',
         views: {
           'tab-calendarioProfe': {
-            templateUrl: 'templates/nuevoEntrenamiento.html',
-            controller: 'NuevoEntrenamientoCtrl'
+            templateUrl: 'templates/nuevoEntrenamiento.html'
           }
         }
       })
