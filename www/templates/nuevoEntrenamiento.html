@@ -1,36 +1,38 @@
-<ion-view view-title="Nuevo Entrenamiento" ng-controller="NuevoEntrenamientoCtrl">
+<ion-view view-title="Nuevo Entrenamiento" ng-controller="NuevoEntrenamientoCtrl as controlador">
     <!--
     <ion-nav-buttons side="right">
         <a ng-show="listaEjercicios" class="button button-icon icon ion-ios-plus" on-tap="nuevo()"></a>
     </ion-nav-buttons>-->
-    <ion-content>
-        <div ng-show="!listaEjercicios">
+    <ion-content> 
+        <form name="myForm" ng-show="!listaEjercicios" novalidate>
             <ion-item>
                 <label class="item item-input">
                     <span class="input-label">Fecha</span>
-                    <input type="date">
+                    <input type="date" ng-model="form.fecha" required>
                 </label>
                 <label class="item item-input item-stacked-label">
-                    <textarea id='textAreaEntrenamiento' rows="5" ng-keypress="updateEditor()" placeholder="Descripción" ng-model="descripcion"></textarea>
+                    <textarea id='textAreaEntrenamiento' rows="5" ng-keypress="updateEditor()" placeholder="Descripción" ng-model="form.descripcion"></textarea>
                 </label>
             </ion-item>
-            <button class="button button-block button-balanced" on-tap="continuar()">
+            <button class="button button-block button-balanced" ng-disabled="myForm.$invalid" on-tap="continuar()">
                 Continuar
             </button>
-        </div>
+        </form>
         <div ng-show="listaEjercicios">
-<label class="item item-input">
+            <!--<label class="item item-input">
             <input type="text" placeholder="Ingresar nuevo">
-            <!--<button>Agregar</button>-->
-        </label>            
+            <a class = "button button-icon icon ion-ios-plus"></a>
+        </label>-->
+            <p class="text text-center" ng-if="!ejercicios[0]">Agrega un nuevo ejercicio</p>
             <ion-list>
                 <ion-item ng-repeat="item in ejercicios">
-                    {{item.name}}
+                    {{item}}
                     <ion-option-button class="button-info" ng-click="edit(item)">
                         Editar
                     </ion-option-button>
                     <ion-delete-button class="ion-minus-circled" ng-click="items.splice($index, 1)">
-                    </ion-delete-button>                    
+                        Eliminar
+                    </ion-delete-button>
                     <!--
                     <ion-option-button class="button button-info button-icon icon ion-ios-plus" ng-click="edit(item)">
                         Editar
@@ -38,11 +40,20 @@
                 </ion-item>
             </ion-list>
         </div>
-        
+
     </ion-content>
-    <ion-footer-bar ng-show="listaEjercicios">
-        <label class="item item-input">
-            <input type="text" placeholder="Ingresar nuevo">
-        </label>        
-    </ion-footer-bar>
+    <!--
+    <ion-footer-bar ng-show="listaEjercicios">        
+                <label class="item item-input ">
+                    <input type="text" placeholder="Ingresar nuevo" ng-model="nuevoEjercicio">
+                </label>
+                <button class="button button-icon icon icon-right ion-ios-redo"></button>
+    </ion-footer-bar>-->
+    
+    <ion-footer-bar keyboard-attach class="item-input-inset bar-detail" ng-show="listaEjercicios">
+        <label class="item-input">
+        <input type="text" placeholder="Ingresar nuevo" ng-model="form.nuevoEjercicio"/>
+        </label>
+        <a class="button button-icon icon icon-right ion-ios-redo" ng-disabled="!form.nuevoEjercicio" on-tap="agregar()"></a>
+    </ion-footer-bar>    
 </ion-view>
