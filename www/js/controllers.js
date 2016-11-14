@@ -45,7 +45,8 @@ angular.module('starter.controllers', [])
     //---        
   })
 
-  .controller('RegistroCtrl', function ($scope, $state, $ionicLoading, $ionicPopup, $ionicHistory, $localstorage) {
+  .controller('RegistroCtrl', function ($scope, $http, $state, $ionicLoading, $ionicPopup, $ionicHistory, $localstorage) {
+
     // se crea la estructura user, luego aquí se reciben el usuario y la contraseña
     $scope.user = {}
 
@@ -55,11 +56,44 @@ angular.module('starter.controllers', [])
     // función que se ejecuta al presionar el boton Entrar, valida que las credenciales del usuario sean correctas
     $scope.registrarse = function () {
 
-      $ionicHistory.clearHistory()
-      $ionicHistory.clearCache().then(function () {
-        $state.go('tab.rutinas')
+      $ionicLoading.show({
+        template: 'Procesando'
+      })
+
+      // se conecta a la API y registra el usuario
+      var header = { headers: { 'Content-Type': 'application/json' } }
+      var body = JSON.stringify({
+        nombre: $scope.user.nombre,
+        contrasena: $scope.user.pass,
+        nombreApellido: $scope.user.nombreApellido
       });
-    };
+      $http.post('https://hectorapi.herokuapp.com/api/usuarios', body, header)
+        .success(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          console.log('data success - alta');
+          console.log(JSON.stringify(data));
+
+          $ionicHistory.clearHistory()
+          $ionicHistory.clearCache().then(function () {
+            if ($localstorage.get("atleta")) {
+              //$state.go('tab.entrenamientoAtleta')
+              $state.go('tab.calendarioProfe')
+            }
+            else {
+              $state.go('tab.calendarioProfe')
+            }
+
+          })
+        })
+        .error(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          $ionicPopup.alert({
+            title: 'Upps',
+            template: 'Verifique su información'
+          });
+          console.log(JSON.stringify(data))
+        })
+    }
   })
 
   .controller('CalendarioAtletaCtrl', function ($ionicLoading, $rootScope, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
@@ -96,7 +130,7 @@ angular.module('starter.controllers', [])
 
     // Obtengo el día en la semana donde me ubico
     $scope.fecha = new Date();  // por defecto el día calendario donde me encuentro
-    
+
     switch ($scope.fecha.getDay()) {
       case 0: // Domingo
         $scope.diasC = new Array('J', 'V', 'S', 'D', 'L', 'M', 'X')
@@ -128,7 +162,7 @@ angular.module('starter.controllers', [])
     $scope.dia5 = $scope.diasC[4]
     $scope.dia6 = $scope.diasC[5]
     $scope.dia7 = $scope.diasC[6]
-    
+
     resolverFecha($scope, $scope.dia4)
 
     console.log($scope.diasC);
@@ -185,11 +219,15 @@ angular.module('starter.controllers', [])
           console.log('data success - entrenamientos por profe y fecha');
           console.log(JSON.stringify(data));
 
-          // Con el atletaId obtengo el nombre
-          for (var x in data) {
-            atletas.push(data[x].atletaId);
-            console.log(data[x].atletaId);
-          }
+          $scope.entrenamientos = data;
+          /*
+                    // Con el atletaId obtengo el nombre
+                    for (var x in data) {
+                      atletas.push(data[x].atletaId);
+                      //console.log(data[x].atletaId);
+                      $scope.entrenamientoId = data[x]._id;
+                      //console.log($scope.entrenamientoId); 
+                    }*/
 
         })
         .error(function (data, status, headers, config) {
@@ -206,7 +244,7 @@ angular.module('starter.controllers', [])
                 $ionicLoading.hide();
                 console.log('data success - entrenamientos por profe y fecha');
                 console.log(JSON.stringify(data));
-
+ 
                 // Con el atletaId obtengo el nombre
                 
                 { 
@@ -222,7 +260,6 @@ angular.module('starter.controllers', [])
                 console.log(JSON.stringify(data))
               })          
           }*/
-          $scope.entrenamientos = atletas;
         })
     };
     //--- 
@@ -267,6 +304,7 @@ angular.module('starter.controllers', [])
     $scope.agregar = function () {
       // Lo agrego al array para verlo en pantalla
       vm.ejercicios.push(vm.nuevoEjercicio)
+      vm.nuevoEjercicio = '';
       console.log('NuevoEntrenamientoCtrl agregar: ' + vm.ejercicios)
     }
 
@@ -363,7 +401,7 @@ angular.module('starter.controllers', [])
       if (dia < 10) { dia = '0' + dia }
 
       var fecha = vm.fecha.getFullYear() + '-' + mes + '-' + dia;
-      console.log('Fecha pasada: ' + vm.fecha.getFullYear() + '-' + mes + '-' + dia);
+      //console.log('Fecha pasada: ' + vm.fecha.getFullYear() + '-' + mes + '-' + dia);
 
       var ejercicios = [];
       /*
@@ -420,105 +458,155 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('EntrenamientoDetalleCtrl', function ($state, $stateParams, Ejercicios, $scope, $ionicModal) {
+  .controller('EntrenamientoDetalleCtrl', function ($state, $stateParams, $ionicLoading, $localstorage, $scope, $ionicScrollDelegate, $http) {
 
     console.log('EntrenamientoDetalleCtrl')
-    /*
-        // Load the add / change dialog from the given template URL
-        $ionicModal.fromTemplateUrl('templates/agregarEjercicioDialog.html', function (modal) {
-          $scope.addDialog = modal;
-        }, {
-            scope: $scope,
-            animation: 'slide-in-up'
-          });
-    
-        $scope.showAddChangeDialog = function (action) {
-          $scope.action = action;
-          $scope.addDialog.show();
-        };
-    
-        $scope.leaveAddChangeDialog = function () {
-          // Remove dialog 
-          $scope.addDialog.remove();
-          // Reload modal template to have cleared form
-          $ionicModal.fromTemplateUrl('add-change-dialog.html', function (modal) {
-            $scope.addDialog = modal;
-          }, {
-              scope: $scope,
-              animation: 'slide-in-up'
-            });
-        };
-        $scope.nuevo = function () {
-          $scope.showAddChangeDialog('add');
-        }
-        // Define item buttons
-        $scope.itemButtons = [{
-          text: 'Delete',
-          type: 'button-assertive',
-          onTap: function (item) {
-            $scope.removeItem(item);
-          }
-        }, {
-            text: 'Edit',
-            type: 'button-calm',
-            onTap: function (item) {
-              $scope.showEditItem(item);
-            }
-          }];
-    
-        $scope.addItem = function (form) {
-          var newItem = {};
-          // Add values from form to object
-          newItem.description = form.description.$modelValue;
-          newItem.useAsDefault = form.useAsDefault.$modelValue;
-          // If this is the first item it will be the default item
-          if ($scope.list.length == 0) {
-            newItem.useAsDefault = true;
-          } else {
-            // Remove old default entry from list	
-            if (newItem.useAsDefault) {
-              removeDefault();
-            }
-          }
-          // Save new list in scope and factory
-          $scope.list.push(newItem);
-          ListFactory.setList($scope.list);
-          // Close dialog
-          $scope.leaveAddChangeDialog();
-        };*/
-
-    var atletaId = 0;//$stateParams.atletaId;
-    //console.log('$stateParams.atletaId: ', $stateParams.atletaId);
-    // console.log('Entrenamientos: ', JSON.stringify(Entrenamientos.all()));
+    var entrenamientoId = $stateParams.entrenamientoId;
+    var atletaId = $stateParams.atletaId;
+    var fecha = $stateParams.fecha;
+    var token = $localstorage.get("access_token")
 
     activar()
-    console.log(JSON.stringify(Ejercicios.all()))
+
     // funcion que carga la lista de entrenamientos de un atleta
     function activar() {
-      //  console.log("CLOG" + JSON.stringify(Entrenamientos.get(/*atletaId*/0)));
-      $scope.ejercicios = Ejercicios.all(); //Entrenamientos.get(/*atletaId*/0);
+
+      $ionicLoading.show({
+        template: 'Cargando'
+      })
+      $ionicScrollDelegate.scrollTop()
+      var atletas = []
+
+      // se conecta a la API y obtiene el atleta
+      $http.get('https://hectorapi.herokuapp.com/api/entrenamientos/' + entrenamientoId + '?token=' + token)
+        .success(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          console.log('data success - entrenamientos por id');
+          console.log(JSON.stringify(data));
+          $scope.ejercicios = data.ejercicios;
+
+        })
+        .error(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          alert(data);
+          console.log(JSON.stringify(data))
+        })
+    };
+
+    // Agregar un ejercicio al string de ejercicios
+    $scope.agregar = function () {
+      // Lo agrego al array para verlo en pantalla
+      $scope.ejercicios.push($scope.nuevoEjercicio)
+      console.log('NuevoEntrenamientoCtrl agregar: ' + $scope.ejercicios)
+      /*
+      // creo la rutina
+      var header = { headers: { 'Content-Type': 'application/json' } }
+      var body = JSON.stringify({
+        nombre: vm.nombreEntrenamiento,
+        ejercicios: vm.ejercicios
+      });
+      $http.post('https://hectorapi.herokuapp.com/api/rutinas' + '?token=' + token, body, header)
+        .success(function (data, status, headers, config) {
+          console.log('data success - Nueva rutina');
+          console.log(JSON.stringify(data)); // for browser console
+          // Navego a una nueva ventana        
+          $state.go('tab.enviarEntrenamiento', { idRutina: data._id })
+          //$scope.ejercicios = data[0].ejercicios;                  
+        })
+        .error(function (data, status, headers, config) {
+          alert("Error al conectarse al servidor!")
+          console.log('data error ' + data);
+        })*/
+
+      // modifico el entrenamiento
+      var header = { headers: { 'Content-Type': 'application/json' } }
+      var body = JSON.stringify({
+        fecha: fecha,
+        atletaId: atletaId,
+        ejercicios: $scope.ejercicios
+      });
+      $http.put('https://hectorapi.herokuapp.com/api/entrenamientos/' + entrenamientoId + '?token=' + token, body, header)
+        .success(function (data, status, headers, config) {
+          console.log('data success Nuevo entrenamiento');
+          console.log(JSON.stringify(data)); // for browser console
+          $scope.nuevoEjercicio = '';
+        })
+        .error(function (data, status, headers, config) {
+          alert(data.message)
+          console.log('data error ' + JSON.stringify(data));
+        })
     };
 
   })
 
-  .controller('RutinasCtrl', function ($state, $rootScope, $ionicHistory, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
+  .controller('RutinaDetalleCtrl', function ($state, $stateParams, $ionicLoading, $localstorage, $scope, $ionicScrollDelegate, $http) {
+
+    console.log('RutinaDetalleCtrl')
+    var rutinaId = $stateParams.rutinaId;
+    var token = $localstorage.get("access_token")
+
+    activar()
+
+    // funcion que carga la lista de entrenamientos de un atleta
+    function activar() {
+
+      $ionicLoading.show({
+        template: 'Cargando'
+      })
+      $ionicScrollDelegate.scrollTop()
+
+      $ionicLoading.hide();
+      $scope.ejercicios = ['A', 'B', 'C']
+      /*
+            // se conecta a la API y obtiene el atleta
+            $http.get('https://hectorapi.herokuapp.com/api/rutinas/' + rutinaId + '?token=' + token)
+              .success(function (data, status, headers, config) {
+                $ionicLoading.hide();
+                console.log('data success - rutinas por id');
+                console.log(JSON.stringify(data));
+                //$scope.rutinas = data.ejercicios;
+      
+              })
+              .error(function (data, status, headers, config) {
+                $ionicLoading.hide();
+                alert(data);
+                console.log(JSON.stringify(data))
+              })*/
+    };
+  })
+
+  .controller('RutinasCtrl', function ($state, $rootScope, $ionicHistory, $ionicLoading, $http, $localstorage, $log, $scope, Rutinas, $ionicScrollDelegate) {
     console.log(">>>RutinasCtrl")
 
     var vm = this;
+    var token = $localstorage.get("access_token")
+
     activar()
 
-    //console.log("Rutinas " + JSON.stringify(Rutinas.all()[1]))
-
-
-    // esta funcion carga la lista de rutinas
+    // funcion que carga la lista de entrenamientos de un atleta
     function activar() {
+
+      $ionicLoading.show({
+        template: 'Cargando'
+      })
       $ionicScrollDelegate.scrollTop()
-      $scope.rutinas = Rutinas.all();
-      $scope.remove = function (rutina) {
-        Rutinas.remove(rutina);
-      };
+      var atletas = []
+
+      // se conecta a la API y obtiene el atleta
+      $http.get('https://hectorapi.herokuapp.com/api/profesor/rutinas' + '?token=' + token)
+        .success(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          console.log('data success - rutinas por profe');
+          console.log(JSON.stringify(data));
+          vm.rutinas = data;
+
+        })
+        .error(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          alert(data);
+          console.log(JSON.stringify(data))
+        })
     };
-    //--- 
 
     // esta funcion se usa para el refresh
     $scope.refresh = function () {
@@ -602,7 +690,7 @@ angular.module('starter.controllers', [])
   });
 
 function resolverFecha($scope, diaSelected) {
-  
+
   fechaSeleccionada = new Date($scope.fecha)
   console.log(diaSelected)
   switch (diaSelected) {
@@ -610,14 +698,14 @@ function resolverFecha($scope, diaSelected) {
       fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() - 3));
       break;
     case $scope.dia2:
-      fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() - 2));      
+      fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() - 2));
       break;
     case $scope.dia3:
       fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() - 1));
       break;
     case $scope.dia4:
       fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate()));
-      break;      
+      break;
     case $scope.dia5:
       fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() + 1));
       break;
@@ -628,7 +716,7 @@ function resolverFecha($scope, diaSelected) {
       fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() + 3));
       break;
   }
-  
+
   console.log("Fecha: " + fechaS)
 
   // Convierto formato

@@ -1,9 +1,9 @@
-<ion-view view-title="Calendario">
+<ion-view view-title="Entrenamientos">
   <ion-nav-buttons side="right">
     <a class="button button-icon icon ion-ios-plus" on-tap="nuevoEntrenamiento()"></a>
   </ion-nav-buttons>
-  <ion-content padding="true">
-    <div class="button-bar">
+  <ion-content >
+    <div class="button-bar" style="padding: 8px;">
       <a class="button button-icon" ng-class="{energized: dia1==seleccionado}" on-tap="seleccionarDia(dia1)"><b>{{dia1}}</b></a>
       <a class="button button-icon" ng-class="{energized: dia2==seleccionado}" on-tap="seleccionarDia(dia2)"><b>{{dia2}}</b></a>
       <a class="button button-icon" ng-class="{energized: dia3==seleccionado}" on-tap="seleccionarDia(dia3)"><b>{{dia3}}</b></a>
@@ -14,10 +14,10 @@
     </div>
     <div>
       <p class="text text-center" ng-if="!entrenamientos[0]">No hay entrenamientos para mostrar</p>
-      <ion-list>
+      <ion-list class="item-border-off">
         <ion-item collection-repeat="entrenamiento in entrenamientos | filter:search" class="item-icon-right" type="item-text-wrap"
-          href="#/tab/entrenamiento-detalle/{{entrenamientoId}}"> 
-          {{entrenamiento}}
+          href="#/tab/entrenamiento-detalle/{{entrenamiento._id}}/{{entrenamiento.atletaId}}/{{fechaS}}">
+          {{entrenamiento.atletaId}}
           <i class="icon ion-chevron-right icon-accessory"></i>
         </ion-item>
       </ion-list>

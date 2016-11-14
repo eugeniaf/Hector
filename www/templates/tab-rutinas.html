@@ -1,19 +1,14 @@
-<ion-view view-title="Rutinas" ng-controller="RutinasCtrl">
-	<ion-nav-buttons side="right">
-        <a class="button button-icon icon ion-ios-heart" on-tap="cambiarPerfil()"></a>
-    </ion-nav-buttons>      
+<ion-view view-title="Rutinas" ng-controller="RutinasCtrl as controlador">   
     <ion-content>  
         <ion-refresher pulling-text="Actualizar..." on-refresh="refresh()">
         </ion-refresher>   
-        <p class="text text-center" ng-if="!rutinas[0]">No hay rutinas para mostrar</p>                
+        <div padding="true" ng-if="!controlador.rutinas[0]">
+            <br>
+            <p class="text text-center" >No hay rutinas para mostrar</p>  
+        </div>         
         <ion-list class="item-border-off">
-            <ion-item collection-repeat="rutina in rutinas | filter:search" class="item-icon-right" type="item-text-wrap" href="#/tab/rutina-detalle/{{rutina.id}}">
-                <h3>
-                    {{rutina.name}}
-                </h3>
-                <p>
-                    {{rutina.description}}
-                </p>                
+            <ion-item collection-repeat="rutina in controlador.rutinas | filter:search" class="item-icon-right" type="item-text-wrap" href="#/tab/rutina-detalle/{{rutina._id}}">
+                    {{rutina.nombre}}
                 <i class="icon ion-chevron-right icon-accessory"></i>
             </ion-item>                   
         </ion-list>

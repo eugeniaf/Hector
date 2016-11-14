@@ -1,27 +1,28 @@
-<ion-view hide-nav-bar='true' class="view-login">
-    <ion-content padding="true">
-        <!--
-        <div class="logo" style="text-align: center; margin-top: 50px; margin-bottom: 20px">
-            <img ng-src="img/letter-h.png" style="width: 100px; height: 100px;">
-        </div>-->          
-        <form name="myForm" novalidate>
-            <div class="list list-inset text-center">
-                <label class="item item-input">
+<ion-view hide-nav-bar='true' class="view-login" style="background-color: #f8f8f8;">
+    <ion-content>
+        <div  style="text-align:center">
+            <p><h1 style="letter-spacing:10px; padding-top: 100px; padding-bottom: 50px" ><b>Hector</b></h1></p>
+        </div>
+        <div style="text-align: center;" >
+            <form name="myForm" novalidate>
+                <div class="list list-inset text-center ">
+                    <label class="item item-input">
                     <i class="icon ion-ios-person-outline placeholder-icon"></i>
                     <input ng-keyup="countU = countU + 1" name="username" type="text" placeholder="Usuario o Email" ng-model="user.nombre" required>
-                </label>                               
-                <label class="item item-input">
+                </label>
+                    <label class="item item-input">
                     <i class="icon ion-ios-locked-outline placeholder-icon"></i>
                     <input ng-keyup="countP = countP + 1" name="password" type="password" required placeholder="Contraseña" ng-model="user.pass" required>
                 </label>
-                <label class="text assertive" ng-if="myForm.username.$error.required && countU>0">* Olvidaste ingresar tu nombre de usuario o email</label>
-                <br ng-if="myForm.username.$error.required && countU>0">
-                <label class="text assertive" ng-if="myForm.password.$error.required && countP>0">* Olvidaste ingresar tu contraseña</label>            
-                <button class="button button-block button-dark" ng-disabled="myForm.$invalid" on-tap="signIn()">
+                    <label class="text assertive" ng-if="myForm.username.$error.required && countU>0">* Olvidaste ingresar tu nombre de usuario o email</label>
+                    <br ng-if="myForm.username.$error.required && countU>0">
+                    <label class="text assertive" ng-if="myForm.password.$error.required && countP>0">* Olvidaste ingresar tu contraseña</label>
+                    <button class="button button-block button-dark" ng-disabled="myForm.$invalid" on-tap="signIn()">
                     Entrar
-                </button>   
-                <a href="#/registro">Registrarse</a>                            
-            </div>
-        </form>
+                </button>
+                    <a href="#/registro">Registrarse</a>
+                </div>
+            </form>
+        </div>
     </ion-content>
 </ion-view>
