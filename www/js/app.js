@@ -86,6 +86,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
       })
       
+      .state('tab.enviarEntrenamiento', {
+        cache: false,
+        url: '/enviarEntrenamiento/:idRutina',
+        views: {
+          'tab-calendarioProfe': {
+            templateUrl: 'templates/enviarEntrenamiento.html'
+          }
+        }
+      })       
+      
       .state('tab.entrenamiento-detalle', {
         cache: false,
         url: '/entrenamiento-detalle/:entrenamientoId',
@@ -95,7 +105,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             controller: 'EntrenamientoDetalleCtrl'
           }
         }
-      })                    
+      })                           
       
       // Calendario atleta
       .state('tab.calendarioAtleta', {

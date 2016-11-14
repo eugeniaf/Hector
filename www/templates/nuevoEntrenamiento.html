@@ -1,46 +1,31 @@
 <ion-view view-title="Nuevo Entrenamiento" ng-controller="NuevoEntrenamientoCtrl as controlador">
-    <!--
     <ion-nav-buttons side="right">
-        <a ng-show="listaEjercicios" class="button button-icon icon ion-ios-plus" on-tap="nuevo()"></a>
-    </ion-nav-buttons>-->
-    <ion-content> 
-        <form name="myForm" ng-show="!listaEjercicios" novalidate>
-            <ion-item>
-                <label class="item item-input">
-                    <span class="input-label">Fecha</span>
-                    <input type="date" ng-model="form.fecha" required>
-                </label>
-                <label class="item item-input item-stacked-label">
-                    <textarea id='textAreaEntrenamiento' rows="5" ng-keypress="updateEditor()" placeholder="Descripción" ng-model="form.descripcion"></textarea>
-                </label>
+        <a class="button button-icon icon ion-ios-paperplane" on-tap="enviar()" ng-disabled="!controlador.nombreEntrenamiento || !controlador.ejercicios[0]"></a>
+    </ion-nav-buttons>
+    <ion-content>
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">Nombre</span>
+            <input type="text" ng-keyup="count = count + 1" placeholder="Ingresa el nombre del entrenamiento" ng-model="controlador.nombreEntrenamiento">
+        </label>
+        <label class="text assertive" ng-if="controlador.nombreEntrenamiento=='' && count>0">* Olvidaste ingresar un nombre para el entrenamiento</label>
+        <div class="item item-divider text-center">
+            Ejercicios
+        </div>        
+        <ion-refresher pulling-text="Actualizar..." on-refresh="refresh()">
+        </ion-refresher>
+        <br>
+        <p class="text text-center" ng-if="!controlador.ejercicios[0]">Agrega un nuevo ejercicio</p>
+        <ion-list class="item-border-off">
+            <ion-item ng-repeat="item in controlador.ejercicios">
+                {{item}}
+                <ion-option-button class="button-info" ng-click="edit(item)">
+                    Editar
+                </ion-option-button>
+                <ion-delete-button class="ion-minus-circled" ng-click="items.splice($index, 1)">
+                    Eliminar
+                </ion-delete-button>
             </ion-item>
-            <button class="button button-block button-balanced" ng-disabled="myForm.$invalid" on-tap="continuar()">
-                Continuar
-            </button>
-        </form>
-        <div ng-show="listaEjercicios">
-            <!--<label class="item item-input">
-            <input type="text" placeholder="Ingresar nuevo">
-            <a class = "button button-icon icon ion-ios-plus"></a>
-        </label>-->
-            <p class="text text-center" ng-if="!ejercicios[0]">Agrega un nuevo ejercicio</p>
-            <ion-list>
-                <ion-item ng-repeat="item in ejercicios">
-                    {{item}}
-                    <ion-option-button class="button-info" ng-click="edit(item)">
-                        Editar
-                    </ion-option-button>
-                    <ion-delete-button class="ion-minus-circled" ng-click="items.splice($index, 1)">
-                        Eliminar
-                    </ion-delete-button>
-                    <!--
-                    <ion-option-button class="button button-info button-icon icon ion-ios-plus" ng-click="edit(item)">
-                        Editar
-                    </ion-option-button>-->
-                </ion-item>
-            </ion-list>
-        </div>
-
+        </ion-list>
     </ion-content>
     <!--
     <ion-footer-bar ng-show="listaEjercicios">        
@@ -49,11 +34,11 @@
                 </label>
                 <button class="button button-icon icon icon-right ion-ios-redo"></button>
     </ion-footer-bar>-->
-    
-    <ion-footer-bar keyboard-attach class="item-input-inset bar-detail" ng-show="listaEjercicios">
+
+    <ion-footer-bar keyboard-attach class="item-input-inset bar-detail">
         <label class="item-input">
-        <input type="text" placeholder="Ingresar nuevo" ng-model="form.nuevoEjercicio"/>
+        <input type="text" ng-keyup="count = count + 1" placeholder="Ingresar nuevo" ng-model="controlador.nuevoEjercicio"/>
         </label>
-        <a class="button button-icon icon icon-right ion-ios-redo" ng-disabled="!form.nuevoEjercicio" on-tap="agregar()"></a>
-    </ion-footer-bar>    
+        <a class="button button-icon icon icon-right ion-ios-redo" ng-disabled="!controlador.nuevoEjercicio" on-tap="agregar()"></a>
+    </ion-footer-bar>
 </ion-view>

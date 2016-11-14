@@ -1,0 +1,47 @@
+<ion-view view-title="Enviar entrenamiento" ng-controller="enviarEntrenamientoCtrl as controlador">
+    <ion-content>
+        <form name="myForm" novalidate>      
+            <ion-item class="item-borderless"> 
+                <label class="item item-input input-search">
+                    <span style="padding-right: 10px;"> Atleta:</span>
+                    <input type="text" placeholder="Ingresar atleta" ng-model="controlador.atletaBuscar" ng-blur="buscarAtleta()">
+                    <!-- uib-typeahead="atleta as atleta.nombre for atleta in atletas | filter:$viewValue | limitTo:8"-->
+                    <!--<a on-tap="buscarAtleta()"><i class="icon ion-search"></i></a>-->
+                    <span><i class="icon ion-ios-close assertive" style="padding: 10px;" ng-if="!controlador.encontrado"></i></span>
+                    <span><i class="icon ion-ios-checkmark balanced" style="padding: 10px;" ng-if="controlador.encontrado"></i></span>
+                </label>
+                <label class="item item-input">
+                    <span style="padding-right: 10px;">Fecha:</span>
+                    <input type="date" ng-model="controlador.fecha" required>
+                </label>
+            </ion-item>
+            <button class="button button-block button-balanced" ng-disabled="myForm.$invalid || !controlador.encontrado" on-tap="continuar()">
+                Enviar
+            </button>
+        </form>
+    </ion-content>
+</ion-view>
+
+<!--<ion-view view-title="Enviar entrenamiento">
+    <ion-nav-bar class="bar-positive">
+        <ion-nav-back-button>
+            <i></i> Atras
+        </ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content ng-controller="enviarEntrenamientoCtrl as controlador">
+        <div class="list list-inset input-search">
+            <label class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="text" placeholder="Buscar atleta" ng-model="search">
+            </label>
+        </div>          
+        <ion-list class="item-border-off">
+            {{controlador.atletas}}
+            <ion-checkbox ng-repeat="atleta in controlador.atletas | orderBy:'nombre' | filter:search"
+                                ng-model="item.checked" 
+                                ng-checked="item.checked">
+                    <h3>{{atleta.nombre}}</h3>
+                    </ion-checkbox>            
+        </ion-list>
+    </ion-content>
+</ion-view>-->

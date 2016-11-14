@@ -12,34 +12,34 @@ angular.module('starter.controllers', [])
 
     // función que se ejecuta al presionar el boton Entrar, valida que las credenciales del usuario sean correctas
     $scope.signIn = function () {
-      
-            $ionicLoading.show({
-                template: 'Ingresando'
-            })
-            
-            // ejecuta el servicio login
-            login.in($scope.user.nombre, $scope.user.pass, function (err, valid) {
-                $ionicLoading.hide();
-                if (!valid) {
-                    $ionicPopup.alert({
-                        title: 'Upps',
-                        template: 'Usuario o contraseña incorrecta'
-                    });
-                }                
-                // si las credenciales son correctas, borro el historial y navego a la pantalla de inicio
-                if (valid) {
-                    $ionicHistory.clearHistory()                  
-                    $ionicHistory.clearCache().then(function(){
-                      if ($localstorage.get("atleta")) {
-                        //$state.go('tab.entrenamientoAtleta')
-                        $state.go('tab.calendarioProfe')
-                      }
-                      else {
-                        $state.go('tab.calendarioProfe')
-                      }
-                    });                  
-                };
-            });                  
+
+      $ionicLoading.show({
+        template: 'Ingresando'
+      })
+
+      // ejecuta el servicio login
+      login.in($scope.user.nombre, $scope.user.pass, function (err, valid) {
+        $ionicLoading.hide();
+        if (!valid) {
+          $ionicPopup.alert({
+            title: 'Upps',
+            template: 'Usuario o contraseña incorrecta'
+          });
+        }
+        // si las credenciales son correctas, borro el historial y navego a la pantalla de inicio
+        if (valid) {
+          $ionicHistory.clearHistory()
+          $ionicHistory.clearCache().then(function () {
+            if ($localstorage.get("atleta")) {
+              //$state.go('tab.entrenamientoAtleta')
+              $state.go('tab.calendarioProfe')
+            }
+            else {
+              $state.go('tab.calendarioProfe')
+            }
+          });
+        };
+      });
     };
     //---        
   })
@@ -90,7 +90,7 @@ angular.module('starter.controllers', [])
 
     console.log("CalendarioProfeCtrl")
     $scope.atletaId = 0;
-    
+
     // Obtengo el día en la semana donde me ubico
     diaSemana($scope);
 
@@ -98,21 +98,22 @@ angular.module('starter.controllers', [])
 
     // esta funcion carga la lista de rutinas
     function activar() {
-     /* $ionicLoading.show({
-          template: 'Cargando'
-      })*/
+      /* $ionicLoading.show({
+           template: 'Cargando'
+       })*/
       $ionicScrollDelegate.scrollTop()
-           
+
       // ejecuta servicio
-      var config = {headers: 
-                    {'x-access-token': $localstorage.get("access_token")}
-                  }
-      $http.get('https://hectorapi.herokuapp.com/api/yo',config).then(function(resp){
+      var config = {
+        headers:
+        { 'x-access-token': $localstorage.get("access_token") }
+      }
+      $http.get('https://hectorapi.herokuapp.com/api/yo', config).then(function (resp) {
         console.log('Success', resp.data); // JSON object
-      }, function(err){
+      }, function (err) {
         console.error('ERR', err);
-      })      
-          
+      })
+
       /*
       $sails.get('/reporte/obtenerDeAlumno?alumnoId='+$stateParams.alumnoId)
       .success(function (data, status, headers, jwr) {
@@ -122,9 +123,9 @@ angular.module('starter.controllers', [])
       })
       .error(function (data, status, headers, jwr) {
           $ionicLoading.hide();
-      });*/       
-      
-      
+      });*/
+
+
       //$scope.entrenamientos = Entrenamientos.getFecha($scope.fecha, 'Carlos');
       /*
       console.log(JSON.stringify($scope.entrenamientos))
@@ -163,145 +164,221 @@ angular.module('starter.controllers', [])
   })
 
   .controller('NuevoEntrenamientoCtrl', function ($state, $scope, $http, $localstorage) {
-    
-    $scope.mostrarListaEjercicios = false;
-    $scope.ejercicios = [];
-    
+
     console.log('NuevoEntrenamientoCtrl')
-    console.log($scope.mostrarListaEjercicios)
+    var vm = this;
+    vm.ejercicios = [];
+    vm.nombreEntrenamiento = '';
+    var token = $localstorage.get("access_token")
+
+    // Agregar un ejercicio al string de ejercicios
+    $scope.agregar = function () {
+      // Lo agrego al array para verlo en pantalla
+      vm.ejercicios.push(vm.nuevoEjercicio)
+      console.log('NuevoEntrenamientoCtrl agregar: ' + vm.ejercicios)
+    }
+
+    $scope.enviar = function () {
+      // ejercicios
+      var listaEjercicios = vm.ejercicios
+      // nombre
+      var nombreEntrenamiento = vm.nombreEntrenamiento
+      // el profesor es el que está logueado
+      
+      console.log('listaEjercicios: ' + vm.ejercicios)
+      console.log('nombreEntrenamiento: ' + vm.nombreEntrenamiento)
+      
+      if(vm.ejercicios!=[] && vm.nombreEntrenamiento!=''){
+        console.log(' Da de alta nuevo entrenamiento')
+
+        // Al confirmar tengo que crear la rutina asociada al profesor (nombre/profesor/lista de ejercicios)
+        var header = { headers: { 'Content-Type': 'application/json' } }
+        var body = JSON.stringify({
+          nombre: vm.nombreEntrenamiento,
+          ejercicios: vm.ejercicios
+        });
+        $http.post('https://hectorapi.herokuapp.com/api/rutinas' + '?token=' + token, body, header)
+          .success(function (data, status, headers, config) {
+            console.log('data success - Nueva rutina');
+            console.log(JSON.stringify(data)); // for browser console
+            // Navego a una nueva ventana        
+            $state.go('tab.enviarEntrenamiento', {idRutina: data._id})            
+            //$scope.ejercicios = data[0].ejercicios;                  
+          })
+          .error(function (data, status, headers, config) {
+            alert("Error al conectarse al servidor!")
+            console.log('data error ' + data);
+          })
+/*
+          .then(function (resp) {
+            console.log('Then rutinas ' + JSON.stringify(resp));
+          })*/
+        
+      }
+    }
+  })
+
+  .controller('enviarEntrenamientoCtrl', function ($scope, $localstorage, $http, $stateParams) {
+    console.log('>>enviarEntrenamientoCtrl');
+    var token = $localstorage.get("access_token")
+    var vm = this;
+    vm.idRutina = $stateParams.idRutina;
+    console.log("Idrutina recibido: " + $stateParams.idRutina)
+
+    // -- Obtengo nombre de atletas
+    $scope.buscarAtleta = function(){
+      //$scope.atletaSeleccionado = 
+        console.log(vm.atletaBuscar)
+        vm.encontrado = false;
+        
+        // se conecta a la API y obtiene el atleta
+        $http.get('https://hectorapi.herokuapp.com/api/usuarios/'+ vm.atletaBuscar + '?token=' + token)
+          .success(function (data, status, headers, config) {
+            console.log('data success - Buscar atleta');
+            console.log(JSON.stringify(data));
+            if(data!=null){ 
+              vm.atletaSeleccionado = data;
+              vm.encontrado = true;
+            }else{
+              alert("El nombre seleccionado no existe, prueba nuevamente");  
+            }
+          })
+          .error(function (data, status, headers, config) {
+            alert(data.message);
+          })
+          /*
+        .then(function (resp) {
+          console.log('Then buscar atleta ' + JSON.stringify(resp));
+        })  */    
+    }
     
     $scope.continuar = function () {
+      
+      console.log('fecha continuar: ' + vm.fecha) // cambiar formato fecha 
+      console.log('atleta continuar: ' + JSON.stringify(vm.atletaSeleccionado))
+      
+      var mes = vm.fecha.getMonth()+1
+      if (mes<10){mes = '0' + mes}
+      
+      var dia = vm.fecha.getDate()
+      if (dia<10){dia = '0' + dia}      
+      
+      var fecha = vm.fecha.getFullYear() + '-' + mes + '-' + dia;
+      console.log('Fecha pasada: ' + vm.fecha.getFullYear() + '-' + mes + '-' + dia );
+      
+      var ejercicios = [];
       /*
-      console.log('fecha continuar: ' + $scope.form.descripcion)
-      console.log('mensaje: ' + $scope.form.mensaje)
-      console.log('descripcion continuar: ' + $scope.form.fecha)*/
-      
-      $scope.mostrarListaEjercicios = true;
-      console.log($scope.mostrarListaEjercicios)
-      
-      var atletaId = 0;//$stateParams.atletaId;
-      activar()
-      
-      // funcion que carga la lista de entrenamientos 
-      function activar() {
-      //  $scope.ejercicios = Ejercicios.all(); //Entrenamientos.get(/*atletaId*/0);
+      // a partir del id de rutina recibido obtengo los ejercicios
+        $http.get('https://hectorapi.herokuapp.com/api/rutinas/' + vm.idRutina + '?token=' + token)
+          .success(function (data, status, headers, config) {
+            console.log('data success get rutina Nuevo entrenamiento');
+            console.log(JSON.stringify(data)); // for browser console
+            
+          })
+          .error(function (data, status, headers, config) {
+            alert('Error del servidor')
+            console.log('data error ' + data);
+          })
+          */
+               
 
-            // se conecta a la API y obtiene la lista de ejercicios de un profesor
-            var token = $localstorage.get("access_token")
-            var fecha = '2016-10-03' //$scope.fecha
-            console.log('Fecha: ' + fecha)
-            $http.get('https://hectorapi.herokuapp.com/api/atleta/entrenamientos/' + fecha + '?token=' + token)
-              .success(function(data, status, headers,config){
-                  console.log('data success');
-                  console.log(data); // for browser console
-                  //if(resp.data){
-                    //$scope.ejercicios = resp.data[0].ejercicios;    
-                  //}              
-                  //console.log(' > ejercicios', $resp.data[0]);
-                })
-              .error(function(data, status, headers,config){
-                alert("Error al conectarse al servidor!")
-                console.log('data error '+ data);
-              })
-              .then(function(resp){
-console.log('no se que es esto '+ JSON.stringify(resp));
-              })
-              
-            /*
-            $http.get('https://hectorapi.herokuapp.com/api/profesor/entrenamientos/' + fecha + '?token=' + token)
-              .then(function(resp){
-                console.log('Success ejercicios', JSON.stringify(resp.data)); // JSON object 
-                //if(resp.data){
-                  //$scope.ejercicios = resp.data[0].ejercicios;    
-                //}              
-                console.log(' > ejercicios', $resp.data[0]);
-              }, function(err){
-                alert("Error al conectarse al servidor!")
-                console.error('ERR', err);
-              })*/      
-      };    
-      
-      // Agregar un ejercicio al string de ejercicios
-      function agregar(){
-          $scope.ejercicios.push('5')
-      } 
-       
-    }
+      // Al confirmar tengo que crear el entrenamiento asociado al profesor que lo creó y el atleta al que se le va a enviar
+        
+        console.log("atletaseleccionado: " + vm.atletaSeleccionado._id)
+        
+        var header = { headers: { 'Content-Type': 'application/json' } }
+        var body = JSON.stringify({
+          fecha: fecha,
+          atletaId: vm.atletaSeleccionado._id,
+          ejercicios: ['d', 'e', 'f', 'g']
+        });        
+        $http.post('https://hectorapi.herokuapp.com/api/entrenamientos' + '?token=' + token, body, header)
+          .success(function (data, status, headers, config) {
+            console.log('data success Nuevo entrenamiento');
+            console.log(JSON.stringify(data)); // for browser console
+          })
+          .error(function (data, status, headers, config) {
+            alert(data.message)
+            console.log('data error ' + JSON.stringify(data));
+          })
+      };
+    
+
   })
 
   .controller('EntrenamientoDetalleCtrl', function ($state, $stateParams, Ejercicios, $scope, $ionicModal) {
 
     console.log('EntrenamientoDetalleCtrl')
-/*
-    // Load the add / change dialog from the given template URL
-    $ionicModal.fromTemplateUrl('templates/agregarEjercicioDialog.html', function (modal) {
-      $scope.addDialog = modal;
-    }, {
-        scope: $scope,
-        animation: 'slide-in-up'
-      });
-
-    $scope.showAddChangeDialog = function (action) {
-      $scope.action = action;
-      $scope.addDialog.show();
-    };
-
-    $scope.leaveAddChangeDialog = function () {
-      // Remove dialog 
-      $scope.addDialog.remove();
-      // Reload modal template to have cleared form
-      $ionicModal.fromTemplateUrl('add-change-dialog.html', function (modal) {
-        $scope.addDialog = modal;
-      }, {
-          scope: $scope,
-          animation: 'slide-in-up'
-        });
-    };
-    $scope.nuevo = function () {
-      $scope.showAddChangeDialog('add');
-    }
-    // Define item buttons
-    $scope.itemButtons = [{
-      text: 'Delete',
-      type: 'button-assertive',
-      onTap: function (item) {
-        $scope.removeItem(item);
-      }
-    }, {
-        text: 'Edit',
-        type: 'button-calm',
-        onTap: function (item) {
-          $scope.showEditItem(item);
+    /*
+        // Load the add / change dialog from the given template URL
+        $ionicModal.fromTemplateUrl('templates/agregarEjercicioDialog.html', function (modal) {
+          $scope.addDialog = modal;
+        }, {
+            scope: $scope,
+            animation: 'slide-in-up'
+          });
+    
+        $scope.showAddChangeDialog = function (action) {
+          $scope.action = action;
+          $scope.addDialog.show();
+        };
+    
+        $scope.leaveAddChangeDialog = function () {
+          // Remove dialog 
+          $scope.addDialog.remove();
+          // Reload modal template to have cleared form
+          $ionicModal.fromTemplateUrl('add-change-dialog.html', function (modal) {
+            $scope.addDialog = modal;
+          }, {
+              scope: $scope,
+              animation: 'slide-in-up'
+            });
+        };
+        $scope.nuevo = function () {
+          $scope.showAddChangeDialog('add');
         }
-      }];
-
-    $scope.addItem = function (form) {
-      var newItem = {};
-      // Add values from form to object
-      newItem.description = form.description.$modelValue;
-      newItem.useAsDefault = form.useAsDefault.$modelValue;
-      // If this is the first item it will be the default item
-      if ($scope.list.length == 0) {
-        newItem.useAsDefault = true;
-      } else {
-        // Remove old default entry from list	
-        if (newItem.useAsDefault) {
-          removeDefault();
-        }
-      }
-      // Save new list in scope and factory
-      $scope.list.push(newItem);
-      ListFactory.setList($scope.list);
-      // Close dialog
-      $scope.leaveAddChangeDialog();
-    };*/
+        // Define item buttons
+        $scope.itemButtons = [{
+          text: 'Delete',
+          type: 'button-assertive',
+          onTap: function (item) {
+            $scope.removeItem(item);
+          }
+        }, {
+            text: 'Edit',
+            type: 'button-calm',
+            onTap: function (item) {
+              $scope.showEditItem(item);
+            }
+          }];
+    
+        $scope.addItem = function (form) {
+          var newItem = {};
+          // Add values from form to object
+          newItem.description = form.description.$modelValue;
+          newItem.useAsDefault = form.useAsDefault.$modelValue;
+          // If this is the first item it will be the default item
+          if ($scope.list.length == 0) {
+            newItem.useAsDefault = true;
+          } else {
+            // Remove old default entry from list	
+            if (newItem.useAsDefault) {
+              removeDefault();
+            }
+          }
+          // Save new list in scope and factory
+          $scope.list.push(newItem);
+          ListFactory.setList($scope.list);
+          // Close dialog
+          $scope.leaveAddChangeDialog();
+        };*/
 
     var atletaId = 0;//$stateParams.atletaId;
     //console.log('$stateParams.atletaId: ', $stateParams.atletaId);
     // console.log('Entrenamientos: ', JSON.stringify(Entrenamientos.all()));
 
     activar()
-console.log(JSON.stringify(Ejercicios.all()))
+    console.log(JSON.stringify(Ejercicios.all()))
     // funcion que carga la lista de entrenamientos de un atleta
     function activar() {
       //  console.log("CLOG" + JSON.stringify(Entrenamientos.get(/*atletaId*/0)));
@@ -411,13 +488,13 @@ console.log(JSON.stringify(Ejercicios.all()))
   });
 
 function diaSemana($scope) {
-  
+
   // -- Obtengo el día de la semana donde me ubico
   $scope.fecha = new Date();
-  
+
   dias = new Array('D', 'L', 'M', 'X', 'J', 'V', 'S')
   $scope.dia = dias[$scope.fecha.getDay()]
-  
+
   $scope.fecha = '2016-11-09' //new Date();
 
   $scope.domingo = function () {
@@ -447,5 +524,5 @@ function diaSemana($scope) {
   $scope.sabado = function () {
     $scope.dia = 'S';
   };
-  
+
 }
