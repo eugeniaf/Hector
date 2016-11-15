@@ -1,0 +1,21 @@
+<ion-view class="view-login" view-title="Modificar perfil" >
+    <ion-content padding="true" >    
+        <form name="myForm" novalidate>
+            <div class="list list-inset text-center">
+                <label class="item item-input" >
+                    <i class="icon ion-ios-people-outline placeholder-icon"></i>
+                    <input  type="text" ng-model="username" readonly>
+                </label>  
+                <label class="item item-input" >
+                    <i class="icon ion-ios-person-outline placeholder-icon"></i>
+                    <input ng-keyup="countN = countN + 1" name="name" type="text" placeholder="Nombre y Apellido" ng-model="nombreApellido" required>
+                </label>                                                        
+                <label class="text assertive" ng-if="myForm.name.$error.required && countN>0">* Olvidaste ingresar tu nombre y apellido</label>
+                <br ng-if="myForm.name.$error.required && countN>0">                                            
+                <button class="button button-block button-energized" ng-disabled="myForm.$invalid" on-tap="guardar()">
+                    Guardar
+                </button>                                
+            </div>
+        </form>
+    </ion-content>
+</ion-view>

@@ -654,25 +654,51 @@ angular.module('starter.controllers', [])
     console.log("en TabController es atleta: " + $scope.atleta);
   })
 
-  .controller('DashCtrl', function ($scope) { })
 
-  .controller('ChatsCtrl', function ($scope, Chats) {
-    // With the new view caching in Ionic, Controllers are only called
-    // when they are recreated or on app start, instead of every page change.
-    // To listen for when this page is active (for example, to refresh data),
-    // listen for the $ionicView.enter event:
-    //
-    //$scope.$on('$ionicView.enter', function(e) {
-    //});
-
-    $scope.chats = Chats.all();
-    $scope.remove = function (chat) {
-      Chats.remove(chat);
-    };
-  })
-
-  .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
-    $scope.chat = Chats.get($stateParams.chatId);
+  .controller('PerfilCtrl', function ($scope, $state, $ionicLoading, $stateParams, $http, $localstorage) {
+      var token = $localstorage.get("access_token")
+      
+      $ionicLoading.show({
+        template: 'Procesando'
+      })
+      // se conecta a la API y obtiene el atleta
+      $http.get('https://hectorapi.herokuapp.com/api/yo' + '?token=' + token)
+        .success(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          console.log('data success - perfil de usuario');
+          console.log(JSON.stringify(data));
+          $scope.nombreApellido = data.nombreApellido;
+          $scope.username = data.nombre;
+          $scope.usuarioId = data._id;
+        })
+        .error(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          alert(data);
+          console.log(JSON.stringify(data))
+        })    
+        
+        $scope.guardar = function(){
+            $ionicLoading.show({
+              template: 'Procesando'
+            })
+            
+      // modifico el entrenamiento
+      var header = { headers: { 'Content-Type': 'application/json' } }
+      var body = JSON.stringify({
+        nombreApellido: $scope.user.nombreApellido
+      });
+      $http.put('https://hectorapi.herokuapp.com/api/usuarios/' + $scope.usuarioId + '?token=' + token, body, header)
+        .success(function (data, status, headers, config) {
+          console.log('data success modificado');
+          console.log(JSON.stringify(data)); // for browser console
+          
+          $state.go('tab.account')
+        })
+        .error(function (data, status, headers, config) {
+          alert(data.message)
+          console.log('data error ' + JSON.stringify(data));
+        })            
+        }
   })
 
   .controller('AccountCtrl', function ($scope, $localstorage, $ionicLoading, $http, $rootScope) {
@@ -707,36 +733,6 @@ angular.module('starter.controllers', [])
         alert(data);
         console.log(JSON.stringify(data))
       })
-
-    $scope.cambiarPerfil = function (perfil) {
-      console.log("PerfilChange: " + perfil)
-      if (perfil == 'Atleta') {
-        $localstorage.set("atleta", true)
-      } else {
-        $localstorage.set("atleta", false)
-      }
-      $rootScope.sampleStatus = $localstorage.get("atleta");
-    }
-
-    $scope.cambiarPerfil1 = function () {
-      console.log("funcion cambiar perfil: " + $localstorage.get("atleta"))
-      if ($localstorage.get("atleta") === "true") {
-        console.log("es atleta")
-        $localstorage.set("atleta", false)
-
-        $rootScope.sampleStatus = $localstorage.get("atleta");
-
-      } else {
-        console.log("no es atleta")
-        $localstorage.set("atleta", true)
-
-        $rootScope.sampleStatus = $localstorage.get("atleta");
-      }
-    }
-
-    $scope.settings = {
-      //      enableFriends: true
-    };
   });
 
 function resolverFecha(vm, diaSelected) {
