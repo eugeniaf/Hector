@@ -1,39 +1,26 @@
-<!--
-Create tabs with an icon and label, using the tabs-positive style.
-Each tab's child <ion-nav-view> directive will have its own
-navigation history that also transitions its views in and out.
--->
-
 <ion-tabs class="tabs-icon-top tabs-color-active-positive">
 
-  <!-- PERFIL: PROFESOR -->
-
-  <!-- Entrenamientos Tab ng-if="atleta=='false'" -->
-  <ion-tab ng-if="atleta=='false'" title="Entrenamientos" icon-off="ion-ios-calendar-outline" icon-on="ion-ios-calendar" href="#/tab/calendarioAtleta">
-    <ion-nav-view name="tab-calendarioAtleta"></ion-nav-view>
-  </ion-tab>
-
-  <!-- PERFIL: ATLETA -->
-
-  <!-- Entrenamientos Tab ng-if="atleta=='false'" -->
+  <!-- PERFIL: PROFESOR --> 
+  <!-- Entrenamientos Tab ng-if="atleta=='false'"  -->
   <ion-tab title="Entrenamientos" icon-off="ion-ios-calendar-outline" icon-on="ion-ios-calendar" href="#/tab/calendarioProfe">
     <ion-nav-view name="tab-calendarioProfe"></ion-nav-view>
-  </ion-tab>
-
+  </ion-tab>  
+  
   <!-- Rutinas Tab -->
   <ion-tab title="Rutinas" icon-off="ion-ios-stopwatch-outline" icon-on="ion-ios-stopwatch" href="#/tab/rutinas">
     <ion-nav-view name="tab-rutinas"></ion-nav-view>
-  </ion-tab>
+  </ion-tab>  
+
+  <!-- PERFIL: ATLETA -->
+  <!-- Entrenamientos Tab -->
+  <!--
+  <ion-tab ng-if="atleta=='true'" title="Entrenamientos" icon-off="ion-ios-calendar-outline" icon-on="ion-ios-calendar" href="#/tab/calendarioAtleta">
+    <ion-nav-view name="tab-calendarioAtleta"></ion-nav-view>
+  </ion-tab>-->  
 
   <!-- Account Tab -->
   <ion-tab title="Perfil" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/account">
     <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>
-  
-  
-  <!-- prueba Tab 
-  <ion-tab title="Enviar" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/enviarEntrenamiento">
-    <ion-nav-view name="tab-enviarEntrenamiento"></ion-nav-view>
-  </ion-tab>  -->
 
 </ion-tabs>

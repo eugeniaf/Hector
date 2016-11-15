@@ -6,15 +6,21 @@
         <form name="myForm" novalidate>
             <div class="list list-inset text-center">
                 <label class="item item-input" >
+                    <i class="icon ion-ios-people-outline placeholder-icon"></i>
+                    <input ng-keyup="countU = countU + 1" name="name" type="text" placeholder="Nombre de usuario" ng-model="user.username" required>
+                </label>  
+                <label class="item item-input" >
                     <i class="icon ion-ios-person-outline placeholder-icon"></i>
-                    <input ng-keyup="countN = countN + 1" name="name" type="text" placeholder="Nombre de usuario" ng-model="user.nombre" required>
-                </label>                                              
+                    <input ng-keyup="countN = countN + 1" name="name" type="text" placeholder="Nombre y Apellido" ng-model="user.nombreApellido" required>
+                </label>                                                        
                 <label class="item item-input">
                     <i class="icon ion-ios-locked-outline placeholder-icon"></i>
                     <input ng-keyup="countP = countP + 1" name="password" type="password" required placeholder="Contraseña" ng-model="user.pass" required>
                 </label>
-                <label class="text assertive" ng-if="myForm.name.$error.required && countN>0">* Olvidaste ingresar tu nombre</label>
-                <br ng-if="myForm.name.$error.required && countN>0">
+                <label class="text assertive" ng-if="myForm.name.$error.required && countU>0">* Olvidaste ingresar tu nombre de usuario</label>
+                <br ng-if="myForm.name.$error.required && countU>0">
+                <label class="text assertive" ng-if="myForm.name.$error.required && countN>0">* Olvidaste ingresar tu nombre y apellido</label>
+                <br ng-if="myForm.name.$error.required && countN>0">                                
                 <label class="text assertive" ng-if="myForm.password.$error.required && countP>0">* Olvidaste ingresar tu contraseña</label>            
                 <button class="button button-block button-energized" ng-disabled="myForm.$invalid" on-tap="registrarse()">
                     Registrarte

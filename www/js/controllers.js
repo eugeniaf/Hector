@@ -63,7 +63,7 @@ angular.module('starter.controllers', [])
       // se conecta a la API y registra el usuario
       var header = { headers: { 'Content-Type': 'application/json' } }
       var body = JSON.stringify({
-        nombre: $scope.user.nombre,
+        nombre: $scope.user.username,
         contrasena: $scope.user.pass,
         nombreApellido: $scope.user.nombreApellido
       });
@@ -73,17 +73,17 @@ angular.module('starter.controllers', [])
           console.log('data success - alta');
           console.log(JSON.stringify(data));
 
-          $ionicHistory.clearHistory()
-          $ionicHistory.clearCache().then(function () {
-            if ($localstorage.get("atleta")) {
-              //$state.go('tab.entrenamientoAtleta')
-              $state.go('tab.calendarioProfe')
-            }
-            else {
-              $state.go('tab.calendarioProfe')
-            }
-
+          $ionicPopup.alert({
+            title: 'Bienvenido!',
+            template: 'Fuiste registrado correctamente'
           })
+            .then(function (res) {
+              $ionicHistory.clearHistory()
+              $ionicHistory.clearCache().then(function () {
+                $state.go('login')
+              })
+            });
+
         })
         .error(function (data, status, headers, config) {
           $ionicLoading.hide();
@@ -118,116 +118,156 @@ angular.module('starter.controllers', [])
 
     // Obtengo el día en la semana donde me ubico
     $scope.fecha = new Date();  // por defecto el día calendario donde me encuentro
-    diaSemana($scope);
+    //diaSemana($scope);
 
   })
 
-  .controller('CalendarioProfeCtrl', function ($ionicLoading, $ionicPopup, $http, $state, $rootScope, $localstorage, $log, $scope, Entrenamientos, $ionicScrollDelegate) {
+  .controller('CalendarioProfeCtrl', function ($ionicLoading, $ionicPopup, $http, $state, $rootScope, $localstorage, $log, $scope, $ionicPopover, $ionicScrollDelegate) {
 
     console.log("CalendarioProfeCtrl")
     var token = $localstorage.get("access_token")
-    $scope.atletaId = 0;
+    var vm = this;
+    if ($localstorage.get("atleta")=='true') {
+      //$scope.perfil = "atleta"
+      vm.textoPerfil = 'Entrenamientos recibidos'
+    } else {
+      //$scope.perfil = "profesor"
+      vm.textoPerfil = 'Entrenamientos enviados'
+    }
+    vm.esAtleta = $localstorage.get("atleta")
+
+    $ionicPopover.fromTemplateUrl('templates/popover.html', {
+      scope: $scope,
+    }).then(function (popover) {
+      $scope.popover = popover;
+    });
+
+    // --------------- PERFIL PROFESOR ---------------//  
+    $scope.seleccionaProfesor = function () {
+      console.log("Selecciona profesor")
+      $localstorage.set("atleta", false)
+      //$scope.perfil = "profesor";
+      vm.textoPerfil = 'Entrenamientos enviados'
+      activarProfesor()
+      $scope.popover.hide()
+      console.log("ls: " + $localstorage.get("atleta"))
+      vm.esAtleta = $localstorage.get("atleta")
+      //$scope.elPerfil = 'profesor'
+    }
+
+    // --------------- PERFIL ATLETA ---------------//
+    $scope.seleccionaAtleta = function () {
+      //$scope.elPerfil = 'atleta'
+      console.log("Selecciona atleta")
+      $localstorage.set("atleta", true)
+      //$scope.perfil = "atletaaaa";
+      vm.textoPerfil = 'Entrenamientos recibidos'
+      //      activarAtleta()
+      $scope.popover.hide()
+      console.log("ls: " + $localstorage.get("atleta"))
+      vm.esAtleta = $localstorage.get("atleta")
+    }
 
     // Obtengo el día en la semana donde me ubico
-    $scope.fecha = new Date();  // por defecto el día calendario donde me encuentro
+    vm.fecha = new Date();  // por defecto el día calendario donde me encuentro
 
-    switch ($scope.fecha.getDay()) {
+    switch (vm.fecha.getDay()) {
       case 0: // Domingo
-        $scope.diasC = new Array('J', 'V', 'S', 'D', 'L', 'M', 'X')
+        vm.diasC = new Array('J', 'V', 'S', 'D', 'L', 'M', 'X')
         break;
       case 1: // Lunes
-        $scope.diasC = new Array('V', 'S', 'D', 'L', 'M', 'X', 'J')
+        vm.diasC = new Array('V', 'S', 'D', 'L', 'M', 'X', 'J')
         break;
       case 2: // Martes
-        $scope.diasC = new Array('S', 'D', 'L', 'M', 'X', 'J', 'V')
+        vm.diasC = new Array('S', 'D', 'L', 'M', 'X', 'J', 'V')
         break;
       case 3: // Miércoles
-        $scope.diasC = new Array('D', 'L', 'M', 'X', 'J', 'V', 'S')
+        vm.diasC = new Array('D', 'L', 'M', 'X', 'J', 'V', 'S')
         break;
       case 4: // Jueves
-        $scope.diasC = new Array('L', 'M', 'X', 'J', 'V', 'S', 'D')
+        vm.diasC = new Array('L', 'M', 'X', 'J', 'V', 'S', 'D')
         break;
       case 5: // Viernes
-        $scope.diasC = new Array('M', 'X', 'J', 'V', 'S', 'D', 'L')
+        vm.diasC = new Array('M', 'X', 'J', 'V', 'S', 'D', 'L')
         break;
       case 6: // Sábado
-        $scope.diasC = new Array('X', 'J', 'V', 'S', 'D', 'L', 'M')
+        vm.diasC = new Array('X', 'J', 'V', 'S', 'D', 'L', 'M')
         break;
     }
 
-    $scope.dia1 = $scope.diasC[0]
-    $scope.dia2 = $scope.diasC[1]
-    $scope.dia3 = $scope.diasC[2]
-    $scope.dia4 = $scope.diasC[3]
-    $scope.dia5 = $scope.diasC[4]
-    $scope.dia6 = $scope.diasC[5]
-    $scope.dia7 = $scope.diasC[6]
+    vm.dia1 = vm.diasC[0]
+    vm.dia2 = vm.diasC[1]
+    vm.dia3 = vm.diasC[2]
+    vm.dia4 = vm.diasC[3]
+    vm.dia5 = vm.diasC[4]
+    vm.dia6 = vm.diasC[5]
+    vm.dia7 = vm.diasC[6]
 
-    resolverFecha($scope, $scope.dia4)
+    resolverFecha(vm, vm.dia4)
 
-    console.log($scope.diasC);
-    console.log('Dia hoy: ' + $scope.fecha.getDay())
-    $scope.seleccionado = $scope.diasC[3]
+    console.log(vm.diasC);
+    vm.seleccionado = vm.diasC[3]
 
     $scope.seleccionarDia = function (diaSelected) {
-
       dias = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
       dia = dias.indexOf(diaSelected);
 
       switch (dia) {
         case 0: // Domingo
-          $scope.seleccionado = 'D';
+          vm.seleccionado = 'D';
           break;
         case 1: // Lunes
-          $scope.seleccionado = 'L';
+          vm.seleccionado = 'L';
           break;
         case 2: // Martes
-          $scope.seleccionado = 'M';
+          vm.seleccionado = 'M';
           break;
         case 3: // Miércoles
-          $scope.seleccionado = 'X';
+          vm.seleccionado = 'X';
           break;
         case 4: // Jueves
-          $scope.seleccionado = 'J';
+          vm.seleccionado = 'J';
           break;
         case 5: // Viernes
-          $scope.seleccionado = 'V';
+          vm.seleccionado = 'V';
           break;
         case 6: // Sábado
-          $scope.seleccionado = 'S';
+          vm.seleccionado = 'S';
           break;
       }
-
-      resolverFecha($scope, diaSelected)
-      activar()
+      resolverFecha(vm, diaSelected)
+      if ($localstorage.get("atleta")=='true') {
+        activarAtleta()
+      } else {
+        activarProfesor()
+      }
+    }
+    console.log("$localstorage "+$localstorage.get("atleta"))
+    if ($localstorage.get("atleta")=='true') {
+      activarAtleta()
+    } else {
+      activarProfesor()
     }
 
-    activar()
-
-    // esta funcion carga la lista de rutinas
-    function activar() {
+    // Esta funcion carga la lista de entrenamientos enviados por un profesor
+    function activarProfesor() {
+      console.log('activarProfesor');
       $ionicLoading.show({
         template: 'Cargando'
       })
+
       $ionicScrollDelegate.scrollTop()
       var atletas = []
+     // $scope.elPerfil = 'profesor'
 
       // se conecta a la API y obtiene el atleta
-      $http.get('https://hectorapi.herokuapp.com/api/profesor/entrenamientos/' + $scope.fechaJSON + '?token=' + token)
+      $http.get('https://hectorapi.herokuapp.com/api/profesor/entrenamientos/' + vm.fechaJSON + '?token=' + token)
         .success(function (data, status, headers, config) {
           $ionicLoading.hide();
           console.log('data success - entrenamientos por profe y fecha');
           console.log(JSON.stringify(data));
 
-          $scope.entrenamientos = data;
-          /*
-                    // Con el atletaId obtengo el nombre
-                    for (var x in data) {
-                      atletas.push(data[x].atletaId);
-                      //console.log(data[x].atletaId);
-                      $scope.entrenamientoId = data[x]._id;
-                      //console.log($scope.entrenamientoId); 
-                    }*/
+          vm.entrenamientosP = data;
 
         })
         .error(function (data, status, headers, config) {
@@ -235,33 +275,9 @@ angular.module('starter.controllers', [])
           alert(data);
           console.log(JSON.stringify(data))
         })
-        .then(function (resp) {
-          /*
-          for(var i in atletas){
-            // se conecta a la API y obtiene el atleta
-            $http.get('https://hectorapi.herokuapp.com/api/profesor/entrenamientos/'+ $scope.fechaJSON + '?token=' + token)
-              .success(function (data, status, headers, config) {
-                $ionicLoading.hide();
-                console.log('data success - entrenamientos por profe y fecha');
-                console.log(JSON.stringify(data));
- 
-                // Con el atletaId obtengo el nombre
-                
-                { 
-                  atletas.push(data[x].atletaId);
-                  console.log(data[x].atletaId);
-                }
-                      $scope.entrenamientos = atletas;
-                
-              })
-              .error(function (data, status, headers, config) {
-                $ionicLoading.hide();
-                alert(data.message);
-                console.log(JSON.stringify(data))
-              })          
-          }*/
-        })
     };
+
+
     //--- 
 
     // esta funcion se usa para el refresh
@@ -270,25 +286,37 @@ angular.module('starter.controllers', [])
     };
     //---       
 
-    $scope.cambiarPerfil = function () {
-      console.log("funcion cambiar perfil: " + $localstorage.get("atleta"))
-      if ($localstorage.get("atleta") === "true") {
-        console.log("es atleta")
-        $localstorage.set("atleta", false)
-
-        $rootScope.sampleStatus = $localstorage.get("atleta");
-
-      } else {
-        console.log("no es atleta")
-        $localstorage.set("atleta", true)
-
-        $rootScope.sampleStatus = $localstorage.get("atleta");
-      }
-    }
-
     $scope.nuevoEntrenamiento = function () {
       $state.go('tab.nuevoEntrenamiento')
     }
+
+    // Esta funcion carga la lista de entrenamientos recibidos por el atleta
+    function activarAtleta() {
+      
+      console.log('activarAtleta');
+      $ionicLoading.show({
+        template: 'Cargando'
+      })
+
+      $ionicScrollDelegate.scrollTop()
+
+      // se conecta a la API y obtiene el atleta
+      $http.get('https://hectorapi.herokuapp.com/api/atleta/entrenamientos/' + vm.fechaJSON + '?token=' + token)
+        .success(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          console.log('data success - entrenamientos por atleta y fecha');
+          console.log(JSON.stringify(data));
+
+          vm.entrenamientosA = data;
+
+        })
+        .error(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          alert(data);
+          console.log(JSON.stringify(data))
+        })
+
+    };
 
   })
 
@@ -339,11 +367,6 @@ angular.module('starter.controllers', [])
             alert("Error al conectarse al servidor!")
             console.log('data error ' + data);
           })
-        /*
-                  .then(function (resp) {
-                    console.log('Then rutinas ' + JSON.stringify(resp));
-                  })*/
-
       }
     }
   })
@@ -357,7 +380,6 @@ angular.module('starter.controllers', [])
 
     // -- Obtengo nombre de atletas
     $scope.buscarAtleta = function () {
-      //$scope.atletaSeleccionado = 
       console.log(vm.atletaBuscar)
       vm.encontrado = false;
 
@@ -377,12 +399,9 @@ angular.module('starter.controllers', [])
           }
         })
         .error(function (data, status, headers, config) {
-          alert(data.message);
+          alert(data);
+          console.log(JSON.stringify(data))
         })
-      /*
-    .then(function (resp) {
-      console.log('Then buscar atleta ' + JSON.stringify(resp));
-    })  */
     }
 
     $scope.continuar = function () {
@@ -391,7 +410,7 @@ angular.module('starter.controllers', [])
         template: 'Procesando'
       })
 
-      console.log('fecha continuar: ' + vm.fecha) // cambiar formato fecha 
+      console.log('fecha continuar: ' + vm.fecha)
       console.log('atleta continuar: ' + JSON.stringify(vm.atletaSeleccionado))
 
       var mes = vm.fecha.getMonth() + 1
@@ -401,44 +420,39 @@ angular.module('starter.controllers', [])
       if (dia < 10) { dia = '0' + dia }
 
       var fecha = vm.fecha.getFullYear() + '-' + mes + '-' + dia;
-      //console.log('Fecha pasada: ' + vm.fecha.getFullYear() + '-' + mes + '-' + dia);
-
-      var ejercicios = [];
-      /*
+      var ejerciciosAtleta = [];
       // a partir del id de rutina recibido obtengo los ejercicios
-        $http.get('https://hectorapi.herokuapp.com/api/rutinas/' + vm.idRutina + '?token=' + token)
-          .success(function (data, status, headers, config) {
-            console.log('data success get rutina Nuevo entrenamiento');
-            console.log(JSON.stringify(data)); // for browser console
-            
-          })
-          .error(function (data, status, headers, config) {
-            alert('Error del servidor')
-            console.log('data error ' + data);
-          })
-          */
-
-
-      // Al confirmar tengo que crear el entrenamiento asociado al profesor que lo creó y el atleta al que se le va a enviar
-
-      console.log("atletaseleccionado: " + vm.atletaSeleccionado._id)
-
-      var header = { headers: { 'Content-Type': 'application/json' } }
-      var body = JSON.stringify({
-        fecha: fecha,
-        atletaId: vm.atletaSeleccionado._id,
-        ejercicios: ['d', 'e', 'f', 'g']
-      });
-      $http.post('https://hectorapi.herokuapp.com/api/entrenamientos' + '?token=' + token, body, header)
+      $http.get('https://hectorapi.herokuapp.com/api/rutinas/' + vm.idRutina + '?token=' + token)
         .success(function (data, status, headers, config) {
-          console.log('data success Nuevo entrenamiento');
+          console.log('data success get rutina Nuevo entrenamiento');
           console.log(JSON.stringify(data)); // for browser console
+          ejerciciosAtleta = data.ejercicios;
 
-          success();
+          // Al confirmar tengo que crear el entrenamiento asociado al profesor que lo creó y el atleta al que se le va a enviar
+          console.log("atletaseleccionado: " + vm.atletaSeleccionado._id)
+          console.log("Ejercicios: " + ejerciciosAtleta)
+          var header = { headers: { 'Content-Type': 'application/json' } }
+          var body = JSON.stringify({
+            fecha: fecha,
+            atletaId: vm.atletaSeleccionado._id,
+            ejercicios: ejerciciosAtleta
+          });
+          $http.post('https://hectorapi.herokuapp.com/api/entrenamientos' + '?token=' + token, body, header)
+            .success(function (data1, status, headers, config) {
+              console.log('data success Nuevo entrenamiento');
+              console.log(JSON.stringify(data1)); // for browser console
+
+              success();
+            })
+            .error(function (data1, status, headers, config) {
+              alert(data1)
+              $ionicLoading.hide();
+              console.log('data error ' + JSON.stringify(data));
+            })
         })
         .error(function (data, status, headers, config) {
-          alert(data.message)
-          console.log('data error ' + JSON.stringify(data));
+          alert('Error del servidor')
+          console.log('data error ' + data);
         })
     };
 
@@ -556,22 +570,22 @@ angular.module('starter.controllers', [])
       $ionicScrollDelegate.scrollTop()
 
       $ionicLoading.hide();
-      $scope.ejercicios = ['A', 'B', 'C']
-      /*
-            // se conecta a la API y obtiene el atleta
-            $http.get('https://hectorapi.herokuapp.com/api/rutinas/' + rutinaId + '?token=' + token)
-              .success(function (data, status, headers, config) {
-                $ionicLoading.hide();
-                console.log('data success - rutinas por id');
-                console.log(JSON.stringify(data));
-                //$scope.rutinas = data.ejercicios;
-      
-              })
-              .error(function (data, status, headers, config) {
-                $ionicLoading.hide();
-                alert(data);
-                console.log(JSON.stringify(data))
-              })*/
+      console.log("IdRutina: " + rutinaId)
+
+      // se conecta a la API y obtiene el atleta
+      $http.get('https://hectorapi.herokuapp.com/api/rutinas/' + rutinaId + '?token=' + token)
+        .success(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          console.log('data success - rutinas por id');
+          console.log(JSON.stringify(data));
+          //$scope.ejercicios = data.ejercicios;
+
+        })
+        .error(function (data, status, headers, config) {
+          $ionicLoading.hide();
+          alert(data);
+          console.log(JSON.stringify(data))
+        })
     };
   })
 
@@ -635,12 +649,16 @@ angular.module('starter.controllers', [])
 
 
   .controller('tabController', function ($scope, $rootScope, $localstorage) {
+
+    $localstorage.set("atleta", false)
+    $scope.atleta = false;
+    /*
     $scope.atleta = $localstorage.get("atleta");
 
-    $rootScope.$watch('sampleStatus', function () {
+    $rootScope.$watch('sampleStatus', function (status) {
       $scope.atleta = $localstorage.get("atleta");
-      console.log("tabController: $scope.atleta " + $scope.atleta)
-    })
+    })*/
+
     console.log("en TabController es atleta: " + $scope.atleta);
   })
 
@@ -665,9 +683,50 @@ angular.module('starter.controllers', [])
     $scope.chat = Chats.get($stateParams.chatId);
   })
 
-  .controller('AccountCtrl', function ($scope) {
+  .controller('AccountCtrl', function ($scope, $localstorage, $ionicLoading, $http, $rootScope) {
 
-    $scope.cambiarPerfil = function () {
+    console.log(">>>AccountCtrl")
+    var vm = this;
+    var token = $localstorage.get("access_token")
+    console.log("get: " + $localstorage.get("atleta"))
+
+    if ($localstorage.get("atleta") === "true") {
+      console.log("es atleta")
+      vm.radioperfil = 'Atleta'
+    } else {
+      console.log("no es atleta")
+      vm.radioperfil = 'Profesor'
+    }
+
+    $ionicLoading.show({
+      template: 'Procesando'
+    })
+    // se conecta a la API y obtiene el atleta
+    $http.get('https://hectorapi.herokuapp.com/api/yo' + '?token=' + token)
+      .success(function (data, status, headers, config) {
+        $ionicLoading.hide();
+        console.log('data success - perfil de usuario');
+        console.log(JSON.stringify(data));
+        vm.user = data.nombre;
+
+      })
+      .error(function (data, status, headers, config) {
+        $ionicLoading.hide();
+        alert(data);
+        console.log(JSON.stringify(data))
+      })
+
+    $scope.cambiarPerfil = function (perfil) {
+      console.log("PerfilChange: " + perfil)
+      if (perfil == 'Atleta') {
+        $localstorage.set("atleta", true)
+      } else {
+        $localstorage.set("atleta", false)
+      }
+      $rootScope.sampleStatus = $localstorage.get("atleta");
+    }
+
+    $scope.cambiarPerfil1 = function () {
       console.log("funcion cambiar perfil: " + $localstorage.get("atleta"))
       if ($localstorage.get("atleta") === "true") {
         console.log("es atleta")
@@ -683,37 +742,36 @@ angular.module('starter.controllers', [])
       }
     }
 
-    console.log(">>>AccountCtrl")
     $scope.settings = {
-      enableFriends: true
+      //      enableFriends: true
     };
   });
 
-function resolverFecha($scope, diaSelected) {
+function resolverFecha(vm, diaSelected) {
 
-  fechaSeleccionada = new Date($scope.fecha)
+  fechaSeleccionada = new Date(vm.fecha)
   console.log(diaSelected)
   switch (diaSelected) {
-    case $scope.dia1:
-      fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() - 3));
+    case vm.dia1:
+      fechaS = new Date(fechaSeleccionada.setDate(vm.fecha.getDate() - 3));
       break;
-    case $scope.dia2:
-      fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() - 2));
+    case vm.dia2:
+      fechaS = new Date(fechaSeleccionada.setDate(vm.fecha.getDate() - 2));
       break;
-    case $scope.dia3:
-      fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() - 1));
+    case vm.dia3:
+      fechaS = new Date(fechaSeleccionada.setDate(vm.fecha.getDate() - 1));
       break;
-    case $scope.dia4:
-      fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate()));
+    case vm.dia4:
+      fechaS = new Date(fechaSeleccionada.setDate(vm.fecha.getDate()));
       break;
-    case $scope.dia5:
-      fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() + 1));
+    case vm.dia5:
+      fechaS = new Date(fechaSeleccionada.setDate(vm.fecha.getDate() + 1));
       break;
-    case $scope.dia6:
-      fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() + 2));
+    case vm.dia6:
+      fechaS = new Date(fechaSeleccionada.setDate(vm.fecha.getDate() + 2));
       break;
-    case $scope.dia7:
-      fechaS = new Date(fechaSeleccionada.setDate($scope.fecha.getDate() + 3));
+    case vm.dia7:
+      fechaS = new Date(fechaSeleccionada.setDate(vm.fecha.getDate() + 3));
       break;
   }
 
@@ -725,6 +783,6 @@ function resolverFecha($scope, diaSelected) {
   var dia = fechaSeleccionada.getDate()
   if (dia < 10) { dia = '0' + dia }
 
-  $scope.fechaJSON = fechaS.getFullYear() + '-' + mes + '-' + dia;
-  console.log($scope.fechaJSON)
+  vm.fechaJSON = fechaS.getFullYear() + '-' + mes + '-' + dia;
+  console.log(vm.fechaJSON)
 }

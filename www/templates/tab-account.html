@@ -1,17 +1,30 @@
-<ion-view view-title="Mi cuenta">
-      
+<ion-view view-title="Mi cuenta" ng-controller="AccountCtrl as controlador">
+
   <ion-content>
+     <div class="item item-icon-left">
+        <i class="icon ion-ios-person "></i> <p><h2>{{controlador.user}}</h2></p>
+      </div>
+      <!--
+    <div class="item item-divider">
+      Perfil
+    </div>
     <ion-list>
+      <ion-radio ng-change="cambiarPerfil(controlador.radioperfil)" ng-model="controlador.radioperfil" ng-value="'Profesor'">Profesor</ion-radio>
+      <ion-radio ng-change="cambiarPerfil(controlador.radioperfil)" ng-model="controlador.radioperfil" ng-value="'Atleta'">Atleta</ion-radio>
+    </ion-list>
+    -->
+    <ion-list>
+      <br>
       <a class="item item-icon-left" href="#">
         <i class="icon ion-ios-email"></i> Notificaciones
         <span class="badge badge-assertive">0</span>
-      </a>      
+      </a>
       <a class="item item-icon-left" href="#">
         <i class="icon ion-ios-gear"></i> Configuración
       </a>
       <a class="item item-icon-left" href="#/login">
         <i class="icon ion-ios-upload-outline"></i> Salir
-      </a>      
+      </a>
     </ion-list>
   </ion-content>
 </ion-view>

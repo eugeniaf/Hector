@@ -83,8 +83,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         url: '/calendarioProfe',
         views: {
           'tab-calendarioProfe': {
-            templateUrl: 'templates/tab-calendarioProfe.html',
-            controller: 'CalendarioProfeCtrl'
+            templateUrl: 'templates/tab-calendarioProfe.html'//,
+            //controller: 'CalendarioProfeCtrl'
           }
         }
       })
@@ -166,8 +166,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         url: '/account',
         views: {
           'tab-account': {
-            templateUrl: 'templates/tab-account.html',
-            controller: 'AccountCtrl'
+            templateUrl: 'templates/tab-account.html'//,
+            //controller: 'AccountCtrl'
           }
         }
       });

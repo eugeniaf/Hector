@@ -1,25 +1,57 @@
-<ion-view view-title="Entrenamientos">
+<ion-view view-title="Entrenamientos" ng-controller="CalendarioProfeCtrl as controlador">
   <ion-nav-buttons side="right">
-    <a class="button button-icon icon ion-ios-plus" on-tap="nuevoEntrenamiento()"></a>
-  </ion-nav-buttons>
-  <ion-content >
-    <div class="button-bar" style="padding: 8px;">
-      <a class="button button-icon" ng-class="{energized: dia1==seleccionado}" on-tap="seleccionarDia(dia1)"><b>{{dia1}}</b></a>
-      <a class="button button-icon" ng-class="{energized: dia2==seleccionado}" on-tap="seleccionarDia(dia2)"><b>{{dia2}}</b></a>
-      <a class="button button-icon" ng-class="{energized: dia3==seleccionado}" on-tap="seleccionarDia(dia3)"><b>{{dia3}}</b></a>
-      <a class="button button-icon" ng-class="{energized: dia4==seleccionado}" on-tap="seleccionarDia(dia4)"><b>{{dia4}}</b></a>
-      <a class="button button-icon" ng-class="{energized: dia5==seleccionado}" on-tap="seleccionarDia(dia5)"><b>{{dia5}}</b></a>
-      <a class="button button-icon" ng-class="{energized: dia6==seleccionado}" on-tap="seleccionarDia(dia6)"><b>{{dia6}}</b></a>
-      <a class="button button-icon" ng-class="{energized: dia7==seleccionado}" on-tap="seleccionarDia(dia7)"><b>{{dia7}}</b></a>
+    <a ng-hide="controlador.esAtleta=='true'" class="button button-icon icon ion-ios-plus" on-tap="nuevoEntrenamiento()"></a>
+    <div class="buttons">
+      <button class="button button-icon ion-more" ng-click="popover.show($event)">
+    </button>
     </div>
-    <div>
-      <p class="text text-center" ng-if="!entrenamientos[0]">No hay entrenamientos para mostrar</p>
+  </ion-nav-buttons>
+  <ion-content>
+    <div class="button-bar" style="padding: 8px;">
+      <a class="button button-icon" ng-class="{energized: controlador.dia1==controlador.seleccionado}" on-tap="seleccionarDia(controlador.dia1)"><b>{{controlador.dia1}}</b></a>
+      <a class="button button-icon" ng-class="{energized: controlador.dia2==controlador.seleccionado}" on-tap="seleccionarDia(controlador.dia2)"><b>{{controlador.dia2}}</b></a>
+      <a class="button button-icon" ng-class="{energized: controlador.dia3==controlador.seleccionado}" on-tap="seleccionarDia(controlador.dia3)"><b>{{controlador.dia3}}</b></a>
+      <a class="button button-icon" ng-class="{energized: controlador.dia4==controlador.seleccionado}" on-tap="seleccionarDia(controlador.dia4)"><b>{{controlador.dia4}}</b></a>
+      <a class="button button-icon" ng-class="{energized: controlador.dia5==controlador.seleccionado}" on-tap="seleccionarDia(controlador.dia5)"><b>{{controlador.dia5}}</b></a>
+      <a class="button button-icon" ng-class="{energized: controlador.dia6==controlador.seleccionado}" on-tap="seleccionarDia(controlador.dia6)"><b>{{controlador.dia6}}</b></a>
+      <a class="button button-icon" ng-class="{energized: controlador.dia7==controlador.seleccionado}" on-tap="seleccionarDia(controlador.dia7)"><b>{{controlador.dia7}}</b></a>
+    </div>
+    <div class="item item-divider">
+      {{controlador.textoPerfil}}
+    </div>    
+    <div ng-if="controlador.esAtleta=='false'">
+      <p class="text text-center" ng-if="!controlador.entrenamientosP[0]">No hay entrenamientos para mostrar</p>
       <ion-list class="item-border-off">
-        <ion-item collection-repeat="entrenamiento in entrenamientos | filter:search" class="item-icon-right" type="item-text-wrap"
-          href="#/tab/entrenamiento-detalle/{{entrenamiento._id}}/{{entrenamiento.atletaId}}/{{fechaS}}">
-          {{entrenamiento.atletaId}}
+        <ion-item collection-repeat="entrenamientoP in controlador.entrenamientosP | filter:search" class="item-icon-right" type="item-text-wrap"
+          href="#/tab/entrenamiento-detalle/{{entrenamientoP._id}}/{{entrenamientoP.atletaId._id}}/{{controlador.fechaS}}">
+          {{entrenamientoP.atletaId.nombre}}
           <i class="icon ion-chevron-right icon-accessory"></i>
         </ion-item>
       </ion-list>
+    </div>
+    <div ng-if="controlador.esAtleta=='true'">
+      <p class="text text-center" ng-if="!controlador.entrenamientosA[0]">ANo hay entrenamientos para mostrar</p>
+      <ion-list class="item-border-off">
+        <ion-item collection-repeat="entrenamientoA in controlador.entrenamientosA | filter:search" class="item-icon-right" type="item-text-wrap"
+          href="#/tab/entrenamiento-detalle/{{entrenamiento._id}}/{{entrenamiento.atletaId._id}}/{{controlador.fechaS}}">
+          {{entrenamientoA.profesorId.nombre}}
+          <i class="icon ion-chevron-right icon-accessory"></i>
+        </ion-item>
+      </ion-list>
+    </div>    
   </ion-content>
+  <script id="templates/popover.html" type="text/ng-template">
+    <ion-popover-view>
+      <ion-content>
+        <div class="list">
+          <a class="item" on-tap="seleccionaProfesor()" target="_blank">
+              Profesor
+            </a>
+          <a class="item" on-tap="seleccionaAtleta()" target="_blank">
+              Atleta
+            </a>
+        </div>
+      </ion-content>
+    </ion-popover-view>
+  </script>
 </ion-view>
