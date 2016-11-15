@@ -139,26 +139,24 @@ angular.module('starter.controllers', [])
     $scope.seleccionaProfesor = function () {
       console.log("Selecciona profesor")
       $localstorage.set("atleta", false)
-      //$scope.perfil = "profesor";
       vm.textoPerfil = 'Entrenamientos enviados'
-      activarProfesor()
       $scope.popover.hide()
       console.log("ls: " + $localstorage.get("atleta"))
-      vm.esAtleta = $localstorage.get("atleta")
-      //$scope.elPerfil = 'profesor'
+      vm.esAtleta = "false"
+      
+      activarProfesor()
     }
 
     // --------------- PERFIL ATLETA ---------------//
     $scope.seleccionaAtleta = function () {
-      //$scope.elPerfil = 'atleta'
       console.log("Selecciona atleta")
+      vm.esAtleta = "true";
       $localstorage.set("atleta", true)
-      //$scope.perfil = "atletaaaa";
       vm.textoPerfil = 'Entrenamientos recibidos'
-      //      activarAtleta()
       $scope.popover.hide()
       console.log("ls: " + $localstorage.get("atleta"))
-      vm.esAtleta = $localstorage.get("atleta")
+      
+      activarAtleta()
     }
 
     // Obtengo el día en la semana donde me ubico
@@ -472,6 +470,7 @@ angular.module('starter.controllers', [])
     var atletaId = $stateParams.atletaId;
     var fecha = $stateParams.fecha;
     var token = $localstorage.get("access_token")
+    $scope.esAtleta = $localstorage.get("atleta")
 
     activar()
 

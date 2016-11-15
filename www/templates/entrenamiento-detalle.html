@@ -1,8 +1,9 @@
 <ion-view view-title="Ejercicios">
     <ion-content>
         <!--Lista de rutinas y ejercicios-->
+        <!--
         <ion-refresher pulling-text="Actualizar..." on-refresh="refresh()">
-        </ion-refresher>
+        </ion-refresher>-->
         <ion-list>
             <ion-item ng-repeat="item in ejercicios">
                 {{item}}
@@ -15,7 +16,8 @@
             </ion-item>
         </ion-list>
     </ion-content>
-    <ion-footer-bar keyboard-attach class="item-input-inset bar-detail">
+    
+    <ion-footer-bar keyboard-attach class="item-input-inset bar-detail" ng-if="esAtleta=='false'">
         <label class="item-input">
             <input type="text" placeholder="Agregar nuevo" style="padding-right: 140px;" ng-model="nuevoEjercicio"/>
             <a class="button button-icon icon icon-right ion-ios-redo" ng-disabled="!nuevoEjercicio" on-tap="agregar()"></a>

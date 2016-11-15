@@ -17,12 +17,12 @@
       <a class="button button-icon" ng-class="{energized: controlador.dia7==controlador.seleccionado}" on-tap="seleccionarDia(controlador.dia7)"><b>{{controlador.dia7}}</b></a>
     </div>
     <div class="item item-divider">
-      {{controlador.textoPerfil}}
+      {{controlador.textoPerfil}} {{controlador.esAtleta}}
     </div>    
     <div ng-if="controlador.esAtleta=='false'">
       <p class="text text-center" ng-if="!controlador.entrenamientosP[0]">No hay entrenamientos para mostrar</p>
       <ion-list class="item-border-off">
-        <ion-item collection-repeat="entrenamientoP in controlador.entrenamientosP | filter:search" class="item-icon-right" type="item-text-wrap"
+        <ion-item collection-repeat="entrenamientoP in controlador.entrenamientosP" class="item-icon-right" type="item-text-wrap"
           href="#/tab/entrenamiento-detalle/{{entrenamientoP._id}}/{{entrenamientoP.atletaId._id}}/{{controlador.fechaS}}">
           {{entrenamientoP.atletaId.nombre}}
           <i class="icon ion-chevron-right icon-accessory"></i>
@@ -30,10 +30,10 @@
       </ion-list>
     </div>
     <div ng-if="controlador.esAtleta=='true'">
-      <p class="text text-center" ng-if="!controlador.entrenamientosA[0]">ANo hay entrenamientos para mostrar</p>
+      <p class="text text-center" ng-if="!controlador.entrenamientosA[0]">No hay entrenamientos para mostrar</p>
       <ion-list class="item-border-off">
-        <ion-item collection-repeat="entrenamientoA in controlador.entrenamientosA | filter:search" class="item-icon-right" type="item-text-wrap"
-          href="#/tab/entrenamiento-detalle/{{entrenamiento._id}}/{{entrenamiento.atletaId._id}}/{{controlador.fechaS}}">
+        <ion-item collection-repeat="entrenamientoA in controlador.entrenamientosA" item-height="100%" item-width="100%" class="item-icon-right" type="item-text-wrap"
+          href="#/tab/entrenamiento-detalle/{{entrenamientoA._id}}/{{entrenamientoA.atletaId._id}}/{{controlador.fechaS}}">
           {{entrenamientoA.profesorId.nombre}}
           <i class="icon ion-chevron-right icon-accessory"></i>
         </ion-item>

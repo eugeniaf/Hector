@@ -23,12 +23,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     });
   })
 
-  .config(function ($stateProvider, $urlRouterProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
     // Set up the various states which the app can be in.
     // Each state's controller can be found in controllers.js
+    var isAndroid = ionic.Platform.isAndroid();
+    if (isAndroid) {
+      $ionicConfigProvider.tabs.position('bottom');
+      $ionicConfigProvider.tabs.style('standard');
+    }
+    $ionicConfigProvider.navBar.alignTitle('center');
+
+
     $stateProvider
 
       // LOGIN DE APLICAIÓN
@@ -65,7 +73,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           }
         }
       })
-      
+
       .state('tab.rutina-detalle', {
         cache: false,
         url: '/rutina-detalle/:rutinaId',
@@ -75,7 +83,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             controller: 'RutinaDetalleCtrl'
           }
         }
-      })      
+      })
 
       // Calendario 
       .state('tab.calendario', {
@@ -87,7 +95,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           }
         }
       })
-      
+
       .state('tab.nuevoEntrenamiento', {
         cache: false,
         url: '/nuevoEntrenamiento',
@@ -97,7 +105,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           }
         }
       })
-      
+
       .state('tab.enviarEntrenamiento', {
         cache: false,
         url: '/enviarEntrenamiento/:idRutina',
@@ -106,8 +114,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             templateUrl: 'templates/enviarEntrenamiento.html'
           }
         }
-      })       
-      
+      })
+
       .state('tab.entrenamiento-detalle', {
         cache: false,
         url: '/entrenamiento-detalle/:entrenamientoId/:atletaId/:fecha',
@@ -117,8 +125,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             controller: 'EntrenamientoDetalleCtrl'
           }
         }
-      })                           
-      
+      })
+
       // Each tab has its own nav history stack:
 
       .state('tab.dash', {
