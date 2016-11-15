@@ -77,14 +77,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
       })      
 
-      // Calendario profe
-      .state('tab.calendarioProfe', {
+      // Calendario 
+      .state('tab.calendario', {
         cache: false,
-        url: '/calendarioProfe',
+        url: '/calendario',
         views: {
-          'tab-calendarioProfe': {
-            templateUrl: 'templates/tab-calendarioProfe.html'//,
-            //controller: 'CalendarioProfeCtrl'
+          'tab-calendario': {
+            templateUrl: 'templates/tab-calendario.html'
           }
         }
       })
@@ -93,7 +92,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         cache: false,
         url: '/nuevoEntrenamiento',
         views: {
-          'tab-calendarioProfe': {
+          'tab-calendario': {
             templateUrl: 'templates/nuevoEntrenamiento.html'
           }
         }
@@ -103,7 +102,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         cache: false,
         url: '/enviarEntrenamiento/:idRutina',
         views: {
-          'tab-calendarioProfe': {
+          'tab-calendario': {
             templateUrl: 'templates/enviarEntrenamiento.html'
           }
         }
@@ -113,24 +112,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         cache: false,
         url: '/entrenamiento-detalle/:entrenamientoId/:atletaId/:fecha',
         views: {
-          'tab-calendarioProfe': {
+          'tab-calendario': {
             templateUrl: 'templates/entrenamiento-detalle.html',
             controller: 'EntrenamientoDetalleCtrl'
           }
         }
       })                           
       
-      // Calendario atleta
-      .state('tab.calendarioAtleta', {
-        url: '/calendarioAtleta',
-        views: {
-          'tab-calendarioAtleta': {
-            templateUrl: 'templates/tab-calendarioAtleta.html',
-            controller: 'CalendarioAtletaCtrl'
-          }
-        }
-      })      
-
       // Each tab has its own nav history stack:
 
       .state('tab.dash', {

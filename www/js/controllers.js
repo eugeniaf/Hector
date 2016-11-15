@@ -30,17 +30,10 @@ angular.module('starter.controllers', [])
         if (valid) {
           $ionicHistory.clearHistory()
           $ionicHistory.clearCache().then(function () {
-            if ($localstorage.get("atleta")) {
-              //$state.go('tab.entrenamientoAtleta')
-              $state.go('tab.calendarioProfe')
-            }
-            else {
-              $state.go('tab.calendarioProfe')
-            }
+              $state.go('tab.calendario')
           });
         };
       });
-      //$state.go('tab.calendarioProfe')
     };
     //---        
   })
@@ -122,9 +115,9 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('CalendarioProfeCtrl', function ($ionicLoading, $ionicPopup, $http, $state, $rootScope, $localstorage, $log, $scope, $ionicPopover, $ionicScrollDelegate) {
+  .controller('CalendarioCtrl', function ($ionicLoading, $ionicPopup, $http, $state, $rootScope, $localstorage, $log, $scope, $ionicPopover, $ionicScrollDelegate) {
 
-    console.log("CalendarioProfeCtrl")
+    console.log("CalendarioCtrl")
     var token = $localstorage.get("access_token")
     var vm = this;
     if ($localstorage.get("atleta")=='true') {
@@ -466,7 +459,7 @@ angular.module('starter.controllers', [])
 
       alertPopup.then(function (res) {
         $ionicHistory.clearHistory()
-        $state.go('tab.calendarioProfe')
+        $state.go('tab.calendario')
       });
     };
 
